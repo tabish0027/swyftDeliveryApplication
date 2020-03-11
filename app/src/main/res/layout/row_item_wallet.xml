@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout3"
+    android:layout_width="match_parent"
+    android:background="@color/color_app_theam_color"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/parcel_type"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/icon_circle_deliverd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="#80703090"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/parcel_type"
+        app:layout_constraintStart_toStartOf="@+id/parcel_type"
+        app:layout_constraintTop_toBottomOf="@+id/parcel_type"></LinearLayout>
+
+    <TextView
+        android:id="@+id/parcel_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/avenirfile"
+        android:text="12:20 PM"
+        android:textColor="#231f20"
+        app:layout_constraintBottom_toBottomOf="@+id/parcel_date"
+        app:layout_constraintStart_toEndOf="@+id/parcel_date"
+        app:layout_constraintTop_toTopOf="@+id/parcel_date" />
+
+    <TextView
+        android:id="@+id/wallet_parcel_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/avenirfile"
+        android:text="18763218"
+        android:textColor="#231f20"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/parcel_type"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout6" />
+
+    <TextView
+        android:id="@+id/wallet_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/avenirfile"
+        android:text="18763218"
+        android:textColor="#231f20"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/parcel_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/wallet_parcel_id" />
+
+    <TextView
+        android:id="@+id/parcel_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/avenirfile"
+        android:text="10/10/2019"
+        android:textColor="#231f20"
+        app:layout_constraintStart_toEndOf="@+id/parcel_type"
+        app:layout_constraintTop_toBottomOf="@+id/wallet_parcel_id" />
+</androidx.constraintlayout.widget.ConstraintLayout>

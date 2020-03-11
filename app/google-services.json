@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "886728776092",
+    "firebase_url": "https://swyft-253311.firebaseio.com",
+    "project_id": "swyft-253311",
+    "storage_bucket": "swyft-253311.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886728776092:android:0c115aa39de212894e9059",
+        "android_client_info": {
+          "package_name": "io.devbeans.swyft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886728776092-1egahh7f8kjc7r5jol94670vmlm0sj2p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiKqyMzW_8EYPHou_-5uYN27aODr4AGrw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886728776092-1egahh7f8kjc7r5jol94670vmlm0sj2p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
