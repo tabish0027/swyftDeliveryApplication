@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -74,6 +75,14 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
     ArrayList<MarkerOptions> markers = new ArrayList<>();
 
 
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+            mDrawerLayout.closeDrawers();
+        }else {
+            finish();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +125,9 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
            // tx_parcels_status_count.setText(Integer.toString(0) + " Scanning Parcels");
 
         }
+
+        navigationView.bringToFront();
+
         Task1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -372,11 +384,11 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
        mMapView.onResume();
         getCurrentLocation();
         super.onResume();
-        LoadResume();
-        getwallet();
-        getEarnings();
-
-
+//        LoadResume();
+//        getwallet();
+        tx_wallet_slider.setText("0.0 Pkr");
+//        getEarnings();
+        tx_earning_slider.setText("0.0 Pkr");
 
     }
     public void LoadResume(){
