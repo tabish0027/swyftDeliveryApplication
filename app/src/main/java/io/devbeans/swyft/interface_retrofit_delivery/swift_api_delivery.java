@@ -47,7 +47,7 @@ public interface swift_api_delivery {
     Call<List<history>> deliveryhistory(@Header("Authorization") String Authorization, @Query("riderId") String riderId);
 
     @Multipart
-    @POST("patch-upload")
+    @POST("file/patch-upload")
     Call<parcel_signature_upload> uploadSignature(   @Part MultipartBody.Part file,
                                                      @Part("patchModel") RequestBody patchModel,
                                                     @Part("modelInstanceId") RequestBody modelInstanceId,

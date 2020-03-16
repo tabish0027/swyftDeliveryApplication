@@ -132,8 +132,6 @@ public class activity_daily_task_status extends Activity {
                 if(Databackbone.getinstance().rider.getUser().getType().equalsIgnoreCase("delivery"))
                     LoadParcelsForDelivery();
                 else
-
-
                 LoadParcels();
             }
         });
