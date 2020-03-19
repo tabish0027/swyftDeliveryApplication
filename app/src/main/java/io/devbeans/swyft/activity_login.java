@@ -134,7 +134,12 @@ public class activity_login extends AppCompatActivity {
 
                     Rider rider = response.body();
                     Databackbone.getinstance().rider = rider;
-                   checkVersionControl();
+
+                    if (Databackbone.getinstance().rider.getUser().getType().equalsIgnoreCase("delivery")){
+                        checkVersionControl();
+                    }else {
+                        Databackbone.getinstance().showAlsertBox(activity_login.this,"error","You are pick up rider. Please use Swyft Pickup App");
+                    }
                    // Toast.makeText(activity_login.this,rider.getId(),Toast.LENGTH_LONG).show();
 
 
