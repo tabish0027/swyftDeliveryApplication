@@ -117,8 +117,6 @@ public class activity_parcel_selection_for_delivery extends AppCompatActivity {
               }
         });
     }
-
-
     @Override
     protected void onResume() {
         super.onResume();

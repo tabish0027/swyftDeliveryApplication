@@ -36,6 +36,8 @@ import com.squareup.picasso.Picasso;
 
 import androidx.navigation.ui.AppBarConfiguration;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -428,9 +430,6 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
        mMapView.onLowMemory();
     }
 
-
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////
         public void LoadParcels(){
             Retrofit retrofit = Databackbone.getinstance().getRetrofitbuilder();
@@ -454,7 +453,21 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
 
                 }
                 else{
-                    DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_mapview.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_mapview.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -462,6 +475,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
             @Override
             public void onFailure(Call<List<PickupParcel>> call, Throwable t) {
                 System.out.println(t.getCause());
+                Databackbone.getinstance().showAlsertBox(activity_mapview.this,"Error","Error Connecting To Server (Riders/get-tasks) "+t.getMessage());
                 tx_parcels_status_count.setText("0 Task Pending");
                 DisableLoading();
             }
@@ -513,9 +527,21 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
 
                 }
                 else{
-                    DisableLoading();
-                    //DeactivateRider();
-                    Databackbone.getinstance().showAlsertBox(activity_mapview.this,"Error","Error Connecting To Server Error Code 33 change_Activity_status" );
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_mapview.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_mapview.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -524,7 +550,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
             public void onFailure(Call<RiderDetails> call, Throwable t) {
                 System.out.println(t.getCause());
                 DisableLoading();
-                Databackbone.getinstance().showAlsertBox(activity_mapview.this,"Error","Error Connecting To Server Error Code 34 change_Activity_status " + t.getMessage());
+                Databackbone.getinstance().showAlsertBox(activity_mapview.this,"Error","Error Connecting To Server (Riders/mark-attendance) "+t.getMessage());
 
                 //DeactivateRider();
             }
@@ -635,7 +661,21 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
 
                 }
                 else{
-                    DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_mapview.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_mapview.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -643,6 +683,8 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
             @Override
             public void onFailure(Call<List<RiderActivityDelivery>> call, Throwable t) {
                 System.out.println(t.getCause());
+                Databackbone.getinstance().showAlsertBox(activity_mapview.this,"Error","Error Connecting To Server (Riders/get-tasks) "+t.getMessage());
+
                 tx_parcels_status_count.setText("0 Task Pending");
                 DisableLoading();
             }

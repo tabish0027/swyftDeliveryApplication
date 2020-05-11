@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -8,7 +8,7 @@ android {
         applicationId "io.swyft.swyft"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 11
+        versionCode 12
         versionName "0.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -36,7 +36,7 @@ android {
 
             //buildConfigField("String", "API_BASE_URL", "\"https://devapi.swyftlogistics.com:3000/api/\"")
            // buildConfigField("String", "API_BASE_URL", "\"https://stagingapi.swyftlogistics.com:3000/api/\"")
-             buildConfigField("String", "API_BASE_URL", "\"http://13.127.135.26:3000/api/\"")
+             buildConfigField("String", "API_BASE_URL", "\"https://sandboxapi.swyftlogistics.com:3000/api/\"")
            // buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.100:3000/api/\"")
 
            //  buildConfigField("String", "API_BASE_URL", "\"http://192.168.100.39:3000/api/\"")
@@ -77,8 +77,10 @@ dependencies {
     implementation 'com.google.maps:google-maps-services:0.1.20'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
 
+    // Add the Firebase SDK for Crashlytics.
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta01'
     /*
     implementation "com.mikepenz:materialdrawer:${lastestMaterialDrawerRelease}"
 

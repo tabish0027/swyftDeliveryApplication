@@ -20,7 +20,6 @@ public class activity_profile  extends Activity {
 
     TextView tx_pro_name,tx_pro_rating,tx_pro_location,tx_pro_phone,tx_pro_distance,tx_pro_duration;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,4 +124,3 @@ public class activity_profile  extends Activity {
     }
 
 }
-

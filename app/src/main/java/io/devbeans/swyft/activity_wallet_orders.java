@@ -29,7 +29,6 @@ import retrofit2.Retrofit;
 
 public class activity_wallet_orders extends Activity {
 
-
     public RecyclerView order_list_wallet;
     public adapter_status_daily_wallet ad_orders_wallet;
     public DatePickerTimeline datePickerTimeline;
@@ -91,7 +90,6 @@ public class activity_wallet_orders extends Activity {
 
 
     }
-
 
     public void generate_test_Data() {
         Databackbone.getinstance().ar_orders_wallet.clear();

@@ -21,6 +21,9 @@ import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.DoubleBounce;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.devbeans.swyft.network.ApiController;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,7 +76,7 @@ public class activity_login extends AppCompatActivity {
         // user with bugs
         //username.setText("03465175407");password.setText("12345"); // delivery stage
 
-//        username.setText("03450000002");password.setText("12345"); // delivery stage
+        username.setText("03021412161");password.setText("12345"); // delivery stage
 
 
         Sprite doubleBounce = new DoubleBounce();
@@ -85,17 +88,15 @@ public class activity_login extends AppCompatActivity {
                 //Intent i = new Intent(activity_login.this,activity_mapview.class);
                 //activity_login.this.startActivity(i);
 
-                if(Databackbone.getinstance().checkInternet(activity_login.this)){
+                if (Databackbone.getinstance().checkInternet(activity_login.this)) {
                     return;
                 }
                 Start_login();
+            }
+        });
 
     }
-    public void changeStatusBarColor(){
 
-
-
-    }
     public void Start_login(){
         username.setEnabled(false);
         password.setEnabled(false);
@@ -143,9 +144,16 @@ public class activity_login extends AppCompatActivity {
                    // Toast.makeText(activity_login.this,rider.getId(),Toast.LENGTH_LONG).show();
 
 
-                }else{
-                    Databackbone.getinstance().showAlsertBox(activity_login.this,"error","wrong username or password");
-                            EnableLogin();
+                }
+                else{
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        Databackbone.getinstance().showAlsertBox(activity_login.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        EnableLogin();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        EnableLogin();
+                    }
                 }
 
             }
@@ -153,13 +161,10 @@ public class activity_login extends AppCompatActivity {
             @Override
             public void onFailure(Call<Rider> call, Throwable t) {
                 System.out.println(t.getCause());
-                Databackbone.getinstance().showAlsertBox(activity_login.this,"Error","Error Connecting To Server Error Code 22 Riders/login "+t.getMessage());
+                Databackbone.getinstance().showAlsertBox(activity_login.this,"Error","Error Connecting To Server (Riders/login) "+t.getMessage());
 
                 EnableLogin();
             }
-        });
-
-    }
         });
 
     }
@@ -185,8 +190,6 @@ public class activity_login extends AppCompatActivity {
                     finish();
                 }
 //                    getRiderDetail();
-
-
 
             }
 

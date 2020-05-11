@@ -18,6 +18,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -190,15 +192,13 @@ public class activity_daily_task_status extends Activity {
     }
     public void StartDeliveryTask(int position){
 
-            if(Databackbone.getinstance().parcelsdelivery.get(position).getData().size() == 0)
-            {
+            if(Databackbone.getinstance().parcelsdelivery.get(position).getData().size() == 0) {
                 completeTaskConfirmation(Databackbone.getinstance().parcelsdelivery.get(position).getTaskId());
             }
-            else if(check_is_any_delivery_task_active()){
-                Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,"Error","Only one task can be activated at a time");
-
-                return;
-            }
+//            else if(check_is_any_delivery_task_active()){
+//                Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,"Error","Only one task can be activated at a time");
+//                return;
+//            }
           /*if( Databackbone.getinstance().ar_task_daily_delivery.get(position).m_remaining_parcels_to_scan ==0 &&!Databackbone.getinstance().ar_task_daily_delivery.get(position).status){
 
                 Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,"Error","The is already an active task");
@@ -208,11 +208,8 @@ public class activity_daily_task_status extends Activity {
               startTaskConfirmation(Databackbone.getinstance().parcelsdelivery.get(position).getData().get(0).getName(), Databackbone.getinstance().parcelsdelivery.get(position).getTaskId());
           }
         /*
-
-
         else{
            // completeTaskConfirmation(Databackbone.getinstance().parcelsdelivery.get(position).getData().get(0).getName(),Databackbone.getinstance().parcelsdelivery.get(position).getTaskId());
-
             //Databackbone.getinstance().showAlsertBox(activity_daily_order_status.this,"Error","Task Not Active");
         }*/
     }
@@ -336,7 +333,21 @@ public class activity_daily_task_status extends Activity {
 
                 }
                 else{
-                    DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_daily_task_status.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -344,6 +355,7 @@ public class activity_daily_task_status extends Activity {
             @Override
             public void onFailure(Call<List<PickupParcel>> call, Throwable t) {
                 System.out.println(t.getCause());
+                Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,"Error","Error Connecting To Server (Riders/get-tasks) "+t.getMessage());
 
                 DisableLoading();
             }
@@ -468,13 +480,29 @@ public class activity_daily_task_status extends Activity {
 
                 }
                 else{
-                    DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_daily_task_status.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
 
             @Override
             public void onFailure(Call<List<PickupParcel>> call, Throwable t) {
+                Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,"Error","Error Connecting To Server (RiderTasks/{taskid}/manage-task) "+t.getMessage());
+
                 DisableLoading();
             }
         });
@@ -540,7 +568,21 @@ public class activity_daily_task_status extends Activity {
 
                 }
                 else{
-                    DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_daily_task_status.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -548,6 +590,7 @@ public class activity_daily_task_status extends Activity {
             @Override
             public void onFailure(Call<List<RiderActivityDelivery>> call, Throwable t) {
                 System.out.println(t.getCause());
+                Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,"Error","Error Connecting To Server (RiderTasks/{taskid}/manage-task) "+t.getMessage());
 
                 DisableLoading();
             }
@@ -575,7 +618,21 @@ public class activity_daily_task_status extends Activity {
                     update_view();
                 }
                 else{
-                    DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_daily_task_status.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -583,6 +640,7 @@ public class activity_daily_task_status extends Activity {
             @Override
             public void onFailure(Call<List<RiderActivityDelivery>> call, Throwable t) {
                 System.out.println(t.getCause());
+                Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,"Error","Error Connecting To Server (Riders/get-tasks) "+t.getMessage());
 
                 DisableLoading();
                 load_Data();

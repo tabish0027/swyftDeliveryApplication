@@ -2,6 +2,7 @@ package io.devbeans.swyft;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -156,9 +159,21 @@ public class activity_signature_pad extends AppCompatActivity {
 
                 }
                 else{
-                    Databackbone.getinstance().showAlsertBox(activity_signature_pad.this, "Error", "Server code error 88");
-
-                    DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_signature_pad.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_signature_pad.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -166,7 +181,7 @@ public class activity_signature_pad extends AppCompatActivity {
             @Override
             public void onFailure(Call<parcel_signature_upload> call, Throwable t) {
                 System.out.println(t.getCause());
-                Databackbone.getinstance().showAlsertBox(activity_signature_pad.this, "Error", "Server code error 89 "+t.getMessage());
+                Databackbone.getinstance().showAlsertBox(activity_signature_pad.this,"Error","Error Connecting To Server (file/patch-upload) "+t.getMessage());
                 DisableLoading();
 
             }
@@ -229,8 +244,21 @@ public class activity_signature_pad extends AppCompatActivity {
 
                 }
                 else{
-                    Databackbone.getinstance().showAlsertBox(activity_signature_pad.this, "Error", "Server code error 98");
-                    DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_signature_pad.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_signature_pad.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -238,7 +266,7 @@ public class activity_signature_pad extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<RiderActivityDelivery>> call, Throwable t) {
                 System.out.println(t.getCause());
-                Databackbone.getinstance().showAlsertBox(activity_signature_pad.this, "Error", "Server code error 99");
+                Databackbone.getinstance().showAlsertBox(activity_signature_pad.this,"Error","Error Connecting To Server (Parcels/manage-parcel) "+t.getMessage());
                 DisableLoading();
             }
         });

@@ -1,6 +1,7 @@
 package io.devbeans.swyft;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import org.json.JSONObject;
 
 import io.devbeans.swyft.interface_retrofit_delivery.delivery_earnings;
 import io.devbeans.swyft.interface_retrofit_delivery.swift_api_delivery;
@@ -104,7 +107,19 @@ public class activity_earning extends Activity {
                     // update_view();
                 }
                 else{
-                    //DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_earning.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_earning.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 swipeToRefresh.setRefreshing(false);
             }
@@ -112,6 +127,8 @@ public class activity_earning extends Activity {
             @Override
             public void onFailure(Call<delivery_earnings> call, Throwable t) {
                 System.out.println(t.getCause());
+                Databackbone.getinstance().showAlsertBox(activity_earning.this,"Error","Error Connecting To Server (Riders/get-earnings) "+t.getMessage());
+
                 swipeToRefresh.setRefreshing(false);
                 //DisableLoading();
                 // load_Data();
@@ -159,6 +176,4 @@ public class activity_earning extends Activity {
         tx_earning_maintance.setText("PKR. "+Float.toString(Databackbone.getinstance().delivery_driver_earning.getWeekly().getMaintenance()));
         tx_earning_total.setText("PKR. "+Float.toString(Databackbone.getinstance().delivery_driver_earning.getWeekly().getEarnings()));
     }
-
-
 }

@@ -1,6 +1,7 @@
 package io.devbeans.swyft;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -260,7 +263,19 @@ public class activity_order_status  extends Activity {
                     // update_view();
                 }
                 else{
-                    //DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_order_status.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_order_status.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 swipeToRefresh.setRefreshing(false);
                 load_history_Data();
@@ -269,6 +284,8 @@ public class activity_order_status  extends Activity {
             @Override
             public void onFailure(Call<List<history>> call, Throwable t) {
                 System.out.println(t.getCause());
+                Databackbone.getinstance().showAlsertBox(activity_order_status.this,"Error","Error Connecting To Server (Riders/get-history) "+t.getMessage());
+
                 swipeToRefresh.setRefreshing(false);
                 //DisableLoading();
                 // load_Data();

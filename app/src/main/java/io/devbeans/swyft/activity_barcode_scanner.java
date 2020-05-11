@@ -25,6 +25,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import org.json.JSONObject;
+
 import io.devbeans.swyft.interface_retrofit.PickupParcel;
 import io.devbeans.swyft.interface_retrofit.parcel_scan;
 
@@ -52,7 +54,6 @@ public class activity_barcode_scanner extends AppCompatActivity implements ZXing
     TextView tx_parcels_to_scan;
     ProgressBar progressBar = null;
     int pending_parcels_to_scan = 0;
-
     EditText edt_parcel_id;
     Button btn_add;
     @Override
@@ -230,7 +231,6 @@ public class activity_barcode_scanner extends AppCompatActivity implements ZXing
 
 
     }
-
     public void check_parcel_to_scan(String id){
        if(Databackbone.getinstance().rider.getUser().getType().equalsIgnoreCase("delivery"))
        {
@@ -321,9 +321,22 @@ public class activity_barcode_scanner extends AppCompatActivity implements ZXing
 
                 }
                 else{
-                    DisableLoading();
-                    //DeactivateRider();
-                    Databackbone.getinstance().showAlsertBox(activity_barcode_scanner.this,"Error","QRcode Not Found Error Code 37");
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_barcode_scanner.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_barcode_scanner.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
+
                 }
 
             }
@@ -332,7 +345,8 @@ public class activity_barcode_scanner extends AppCompatActivity implements ZXing
             public void onFailure(Call<List<PickupParcel>> call, Throwable t) {
                 System.out.println(t.getCause());
                 DisableLoading();
-                Databackbone.getinstance().showAlsertBox(activity_barcode_scanner.this,"Error","Barcode Not Found Error Code 38");
+                Databackbone.getinstance().showAlsertBox(activity_barcode_scanner.this,"Error","Error Connecting To Server (Parcels/{parcelid}/scan-parcel) "+t.getMessage());
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -374,9 +388,21 @@ public class activity_barcode_scanner extends AppCompatActivity implements ZXing
 
                 }
                 else{
-                    DisableLoading();
-                    //DeactivateRider();
-                    Databackbone.getinstance().showAlsertBox(activity_barcode_scanner.this,"Error","QRcode Not Found Error Code 37");
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_barcode_scanner.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_barcode_scanner.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -385,7 +411,7 @@ public class activity_barcode_scanner extends AppCompatActivity implements ZXing
             public void onFailure(Call<List<RiderActivityDelivery>> call, Throwable t) {
                 System.out.println(t.getCause());
                 DisableLoading();
-                Databackbone.getinstance().showAlsertBox(activity_barcode_scanner.this,"Error","Barcode Not Found Error Code 38");
+                Databackbone.getinstance().showAlsertBox(activity_barcode_scanner.this,"Error","Error Connecting To Server (Parcels/scan-delivery-parcel) "+t.getMessage());
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -453,7 +479,21 @@ public class activity_barcode_scanner extends AppCompatActivity implements ZXing
 
                 }
                 else{
-                    DisableLoading();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_barcode_scanner.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_barcode_scanner.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -461,7 +501,7 @@ public class activity_barcode_scanner extends AppCompatActivity implements ZXing
             @Override
             public void onFailure(Call<List<RiderActivityDelivery>> call, Throwable t) {
                 System.out.println(t.getCause());
-
+                Databackbone.getinstance().showAlsertBox(activity_barcode_scanner.this,"Error","Error Connecting To Server (Parcels/scan-delivery-parcel) "+t.getMessage());
                 DisableLoading();
 
             }

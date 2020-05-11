@@ -8,9 +8,38 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:886728776092:android:0c115aa39de212894e9059",
+        "mobilesdk_app_id": "1:886728776092:android:99da258c95f07eb44e9059",
         "android_client_info": {
-          "package_name": "io.devbeans.swyft"
+          "package_name": "io.swyft.pickup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886728776092-1egahh7f8kjc7r5jol94670vmlm0sj2p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiKqyMzW_8EYPHou_-5uYN27aODr4AGrw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886728776092-1egahh7f8kjc7r5jol94670vmlm0sj2p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886728776092:android:00ffb90f5e1824594e9059",
+        "android_client_info": {
+          "package_name": "io.swyft.swyft"
         }
       },
       "oauth_client": [

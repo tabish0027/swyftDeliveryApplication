@@ -2,6 +2,7 @@ package io.devbeans.swyft;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,11 +28,11 @@ import retrofit2.Retrofit;
 
 public class activity_delivery_status extends AppCompatActivity {
 
-
     CheckBox cb_incomplete,cb_consignee,cb_refure,cb_funds;
     TextView tx_note ;
     ProgressBar progressBar = null;
     Button btn_submit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +60,6 @@ public class activity_delivery_status extends AppCompatActivity {
         });
     }
     public void markParcelsTonotcomplete( ){
-
-
-
         double lat = 0.0;
         double lng = 0.0;
         final List<String> parcelIds = Databackbone.getinstance().parcel_to_process;
@@ -133,13 +131,21 @@ public class activity_delivery_status extends AppCompatActivity {
 
                 }
                 else{
-                    JSONObject jObjError = null;
                     try {
-                         jObjError = new JSONObject(response.errorBody().string());
-                     } catch (Exception e) {
-                      }
-                    Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Server code error 98");
-                    DisableLoading();
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                            Intent intent = new Intent(activity_delivery_status.this, activity_login.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }else {
+                            DisableLoading();
+                            //DeactivateRider();
+                            Databackbone.getinstance().showAlsertBox(activity_delivery_status.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DisableLoading();
+                    }
                 }
 
             }
@@ -147,13 +153,12 @@ public class activity_delivery_status extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<RiderActivityDelivery>> call, Throwable t) {
                 System.out.println(t.getCause());
-                Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Server code error 99");
+                Databackbone.getinstance().showAlsertBox(activity_delivery_status.this,"Error","Error Connecting To Server (Parcels/manage-parcel) "+t.getMessage());
                 DisableLoading();
             }
         });
 
     }
-
 
     public void DisableLoading(){
 

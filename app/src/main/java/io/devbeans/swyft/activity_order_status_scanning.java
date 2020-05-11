@@ -161,5 +161,4 @@ public class activity_order_status_scanning extends Activity {
 
     }
 
-
 }
