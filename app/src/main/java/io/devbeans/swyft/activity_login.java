@@ -181,14 +181,21 @@ public class activity_login extends AppCompatActivity {
                     return;
                 }
 
-                if (ContextCompat.checkSelfPermission(activity_login.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED)
-                    ActivityCompat.requestPermissions(activity_login.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                else
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(activity_login.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED)
+                        ActivityCompat.requestPermissions(activity_login.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    else
+                    {
+                        Intent i = new Intent(activity_login.this,activity_mapview.class);
+                        activity_login.this.startActivity(i);
+                        finish();
+                    }
+                }else {
                     Intent i = new Intent(activity_login.this,activity_mapview.class);
                     activity_login.this.startActivity(i);
                     finish();
                 }
+
 //                    getRiderDetail();
 
             }

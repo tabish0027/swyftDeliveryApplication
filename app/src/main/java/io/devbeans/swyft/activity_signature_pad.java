@@ -273,7 +273,6 @@ public class activity_signature_pad extends AppCompatActivity {
 
     }
 
-
     public void DisableLoading(){
         btn_submit.setEnabled(true);
         progressBar.setVisibility(View.GONE);

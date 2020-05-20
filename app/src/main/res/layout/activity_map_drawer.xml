@@ -324,8 +324,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/drawer_round"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline17"
-                    app:layout_constraintStart_toStartOf="@+id/profile_image2"
+                    app:layout_constraintRight_toLeftOf="@+id/guideline17"
+                    app:layout_constraintLeft_toLeftOf="@+id/profile_image2"
                     app:layout_constraintTop_toBottomOf="@+id/profile_image2">
 
                     <ImageView
