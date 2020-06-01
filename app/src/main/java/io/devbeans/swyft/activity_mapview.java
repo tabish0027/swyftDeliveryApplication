@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -107,6 +108,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         progressBar = (ProgressBar)findViewById(R.id.url_loading_animation);
         btn_wallet= findViewById(R.id.btn_wallet);
         btn_earning= findViewById(R.id.btn_earning);
+        btn_earning.setVisibility(View.GONE);
         tx_rating = findViewById(R.id.tx_rating);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.slider_menu);
         btn_slider_menu = findViewById(R.id.btn_slider_menu);
@@ -174,8 +176,8 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         btn_wallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  Intent openaactivity = new Intent(activity_mapview.this,activity_wallet_orders.class);
-              //  activity_mapview.this.startActivity(openaactivity);
+                Intent openaactivity = new Intent(activity_mapview.this,activity_wallet_orders.class);
+                activity_mapview.this.startActivity(openaactivity);
             }
         });
 
@@ -257,7 +259,6 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
                 }else{
                     Databackbone.getinstance().showAlsertBox(activity_mapview.this,"Error","Your Are Not Online");
                 }
-
 
             }
         });
@@ -365,6 +366,15 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         });
         mMapServiceView.setMyLocationEnabled(true);
         mMapServiceView.getUiSettings().setMyLocationButtonEnabled(false);
+
+        mMapServiceView.getUiSettings().setCompassEnabled(true);
+        View compassButton = mMapView.findViewWithTag("GoogleMapCompass");//this works for me
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) compassButton.getLayoutParams();
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_END);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_START,0);
+        rlp.topMargin = 50;
+
         getCurrentLocation();
         LoadResume();
 
@@ -387,8 +397,8 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         getCurrentLocation();
         super.onResume();
 //        LoadResume();
-//        getwallet();
-        tx_wallet_slider.setText("0.0 Pkr");
+        getwallet();
+//        tx_wallet_slider.setText("0.0 Pkr");
 //        getEarnings();
         tx_earning_slider.setText("0.0 Pkr");
 
@@ -705,7 +715,6 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
 
                     delivery_wallet wallet = response.body();
                     Databackbone.getinstance().wallet = wallet;
-
 
                     runOnUiThread(new Runnable() {
 

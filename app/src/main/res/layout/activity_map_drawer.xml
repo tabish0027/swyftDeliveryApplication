@@ -323,7 +323,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:background="@drawable/drawer_round"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/guideline17"
                     app:layout_constraintLeft_toLeftOf="@+id/profile_image2"
                     app:layout_constraintTop_toBottomOf="@+id/profile_image2">
@@ -368,6 +370,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:visibility="gone"
                     android:id="@+id/btn_earning"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

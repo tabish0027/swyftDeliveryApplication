@@ -10,7 +10,7 @@ android {
         applicationId "io.swyft.swyft"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 12
+        versionCode 13
         versionName "0.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -38,8 +38,10 @@ android {
 
             //buildConfigField("String", "API_BASE_URL", "\"https://devapi.swyftlogistics.com:3000/api/\"")
            // buildConfigField("String", "API_BASE_URL", "\"https://stagingapi.swyftlogistics.com:3000/api/\"")
-             buildConfigField("String", "API_BASE_URL", "\"https://sandboxapi.swyftlogistics.com:3000/api/\"")
-           // buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.100:3000/api/\"")
+//             buildConfigField("String", "API_BASE_URL", "\"https://sandboxapi.swyftlogistics.com:3000/api/\"")
+            buildConfigField("String", "API_BASE_URL", "\"https://api.swyftlogistics.com:3000/api/\"")
+
+            // buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.100:3000/api/\"")
 
            //  buildConfigField("String", "API_BASE_URL", "\"http://192.168.100.39:3000/api/\"")
 
