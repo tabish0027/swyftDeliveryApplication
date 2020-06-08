@@ -60,6 +60,7 @@ public class activity_delivery_status extends AppCompatActivity {
         });
     }
     public void markParcelsTonotcomplete( ){
+        btn_submit.setEnabled(false);
         double lat = 0.0;
         double lng = 0.0;
         final List<String> parcelIds = Databackbone.getinstance().parcel_to_process;
@@ -107,6 +108,7 @@ public class activity_delivery_status extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<RiderActivityDelivery>> call, Response<List<RiderActivityDelivery>> response) {
                 if(response.isSuccessful()){
+                    btn_submit.setEnabled(true);
 
                     List<RiderActivityDelivery> parcels = response.body();
                     Databackbone.getinstance().parcelsdelivery = parcels;
@@ -131,6 +133,7 @@ public class activity_delivery_status extends AppCompatActivity {
 
                 }
                 else{
+                    btn_submit.setEnabled(true);
                     try {
                         JSONObject jsonObject = new JSONObject(response.errorBody().string());
                         if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
@@ -153,6 +156,7 @@ public class activity_delivery_status extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<RiderActivityDelivery>> call, Throwable t) {
                 System.out.println(t.getCause());
+                btn_submit.setEnabled(true);
                 Databackbone.getinstance().showAlsertBox(activity_delivery_status.this,"Error","Error Connecting To Server (Parcels/manage-parcel) "+t.getMessage());
                 DisableLoading();
             }

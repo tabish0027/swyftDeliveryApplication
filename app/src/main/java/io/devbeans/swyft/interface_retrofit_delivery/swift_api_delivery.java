@@ -41,7 +41,7 @@ public interface swift_api_delivery {
     Call<delivery_earnings> deliveryEarning(@Header("Authorization") String Authorization, @Query("riderId") String riderId);
 
     @GET("Riders/get-wallet")
-    Call<delivery_wallet> deliverywallet(@Header("Authorization") String Authorization, @Query("riderId") String riderId);
+    Call<List<delivery_wallet>> deliverywallet(@Header("Authorization") String Authorization, @Query("riderId") String riderId);
 
     @GET("Riders/get-history")
     Call<List<history>> deliveryhistory(@Header("Authorization") String Authorization, @Query("riderId") String riderId);

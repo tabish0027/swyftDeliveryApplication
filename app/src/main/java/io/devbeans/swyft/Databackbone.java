@@ -96,7 +96,7 @@ public class Databackbone {
 
     public boolean RiderTypeDelivery = false;
     public delivery_earnings delivery_driver_earning = null;
-    public delivery_wallet wallet;
+    public List<delivery_wallet> wallet;
     public List<history> history= new ArrayList<>();
 
     private Databackbone(){

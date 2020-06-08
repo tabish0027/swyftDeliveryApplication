@@ -526,11 +526,11 @@ public class activity_daily_task_status extends Activity {
                     DisableLoading();
                     return;
                 }
-                else if (response.code() == 400) {
-                    Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,"Error","Please submit the collected amount to swyft office before you mark this task complete");
-                    DisableLoading();
-                    return;
-                }
+//                else if (response.code() == 400) {
+//                    Databackbone.getinstance().showAlsertBox(activity_daily_task_status.this,"Error","Please submit the collected amount to swyft office before you mark this task complete");
+//                    DisableLoading();
+//                    return;
+//                }
                 if(response.isSuccessful()){
 
                     List<RiderActivityDelivery> parcels = response.body();

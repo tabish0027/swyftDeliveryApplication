@@ -68,14 +68,14 @@ public class ApiController {
         Retrofit retrofit = Databackbone.getinstance().getRetrofitbuilder();
         swift_api_delivery riderapidata = retrofit.create(swift_api_delivery.class);
 
-        Call<delivery_wallet> call = riderapidata.deliverywallet(Databackbone.getinstance().rider.getId(),(Databackbone.getinstance().rider.getUserId()));
-        call.enqueue(new Callback<delivery_wallet>() {
+        Call<List<delivery_wallet>> call = riderapidata.deliverywallet(Databackbone.getinstance().rider.getId(),(Databackbone.getinstance().rider.getUserId()));
+        call.enqueue(new Callback<List<delivery_wallet>>() {
             @Override
-            public void onResponse(Call<delivery_wallet> call, Response<delivery_wallet> response) {
+            public void onResponse(Call<List<delivery_wallet>> call, Response<List<delivery_wallet>> response) {
                 if(response.isSuccessful()){
 
-                    delivery_wallet wallet = response.body();
-                    Databackbone.getinstance().wallet = wallet;
+                    List<delivery_wallet> walletList = response.body();
+                    Databackbone.getinstance().wallet = walletList;
 
                     //  DisableLoading();
                     // load_Data();
@@ -88,7 +88,7 @@ public class ApiController {
             }
 
             @Override
-            public void onFailure(Call<delivery_wallet> call, Throwable t) {
+            public void onFailure(Call<List<delivery_wallet>> call, Throwable t) {
                 System.out.println(t.getCause());
 
                 //DisableLoading();

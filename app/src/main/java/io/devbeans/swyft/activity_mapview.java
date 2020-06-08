@@ -75,6 +75,8 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
     TextView tx_parcels_status_count,tx_earning_slider,tx_wallet_slider;
     Marker marker_destination_location = null;
 
+    Float amount = null;
+
     ArrayList<MarkerOptions> markers = new ArrayList<>();
 
 
@@ -208,8 +210,6 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
                      change_Activity_status(attandanceID,true);
                 else
                     change_Activity_status(attandanceID,true);
-
-
 
             }
         });
@@ -707,20 +707,34 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         Retrofit retrofit = Databackbone.getinstance().getRetrofitbuilder();
         swift_api_delivery riderapidata = retrofit.create(swift_api_delivery.class);
 
-        Call<delivery_wallet> call = riderapidata.deliverywallet(Databackbone.getinstance().rider.getId(),(Databackbone.getinstance().rider.getUserId()));
-        call.enqueue(new Callback<delivery_wallet>() {
+        Call<List<delivery_wallet>> call = riderapidata.deliverywallet(Databackbone.getinstance().rider.getId(),(Databackbone.getinstance().rider.getUserId()));
+        call.enqueue(new Callback<List<delivery_wallet>>() {
             @Override
-            public void onResponse(Call<delivery_wallet> call, Response<delivery_wallet> response) {
+            public void onResponse(Call<List<delivery_wallet>> call, Response<List<delivery_wallet>> response) {
                 if(response.isSuccessful()){
 
-                    delivery_wallet wallet = response.body();
-                    Databackbone.getinstance().wallet = wallet;
+                    List<delivery_wallet> walletList = response.body();
+                    Databackbone.getinstance().wallet = walletList;
+
+                    amount = null;
+
+                    for (int i = 0; i < walletList.size(); i++){
+                        if (amount == null){
+                            amount = walletList.get(i).getamount();
+                        }else {
+                            amount += walletList.get(i).getamount();
+                        }
+
+                    }
 
                     runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
-                            tx_wallet_slider.setText(Float.toString(wallet.getamount())+" Pkr");
+                            if (amount != null){
+                                tx_wallet_slider.setText(Float.toString(amount)+" Pkr");
+                            }
+
                         }
                     });
                     //  DisableLoading();
@@ -734,7 +748,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
             }
 
             @Override
-            public void onFailure(Call<delivery_wallet> call, Throwable t) {
+            public void onFailure(Call<List<delivery_wallet>> call, Throwable t) {
                 System.out.println(t.getCause());
 
                 //DisableLoading();
