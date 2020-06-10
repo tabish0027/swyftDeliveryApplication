@@ -718,17 +718,18 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
 
                     amount = null;
 
-                    for (int i = 0; i < walletList.size(); i++){
-                        if (amount == null){
-                            amount = walletList.get(i).getamount();
-                        }else {
-                            amount += walletList.get(i).getamount();
-                        }
+                    if (walletList != null) {
+                        for (int i = 0; i < walletList.size(); i++){
+                            if (amount == null){
+                                amount = walletList.get(i).getamount();
+                            }else {
+                                amount += walletList.get(i).getamount();
+                            }
 
+                        }
                     }
 
                     runOnUiThread(new Runnable() {
-
                         @Override
                         public void run() {
                             if (amount != null){
