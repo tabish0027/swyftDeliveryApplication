@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -64,6 +65,9 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
     TextView tx_username,tx_rating = null;
     ProgressBar progressBar = null;
 
+    SharedPreferences sharedpreferences;
+    SharedPreferences.Editor mEditor;
+    public static final String MyPREFERENCES = "MyPrefs";
 
     ImageView btn_slider_menu;
     private AppBarConfiguration mAppBarConfiguration;
@@ -92,6 +96,8 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        mEditor = sharedpreferences.edit();
         setContentView(R.layout.activity_map_drawer);
         mMapView =  findViewById(R.id.ridermapView);
         offlineTag = findViewById(R.id.img_rider_activity_button_State);
@@ -165,7 +171,10 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         Task5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mEditor.clear().apply();
                 Databackbone.resetStaticPoint();
+                Intent intent = new Intent(activity_mapview.this, activity_login.class);
+                startActivity(intent);
                 activity_mapview.this.finish();
             }
         });
@@ -266,9 +275,12 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         btn_navigation.setVisibility(View.GONE);
 
         // data attributes set from server
-        tx_username.setText("Hi "+Databackbone.getinstance().rider.getUser().getFirstName());
-        Picasso.with(this).load(Databackbone.getinstance().rider.getUser().getProfilePicture()).into(profile_image2);
-        tx_rating.setText(Databackbone.getinstance().rider.getUser().getType());
+        String load = Databackbone.getinstance().rider.getUser().getProfilePicture();
+        tx_username.setText(Databackbone.getinstance().rider.getUser().getFirstName() + " " + Databackbone.getinstance().rider.getUser().getLastName());
+//        Picasso.with(this).load(Databackbone.getinstance().rider.getUser().getProfilePicture()).error(R.drawable.icon_profile_image_offline).into(profile_image2);
+        if (Databackbone.getinstance().rider.getUser().getType().equalsIgnoreCase("delivery")){
+            tx_rating.setText("Delivery Rider");
+        }
         btn_navigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -733,7 +745,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
                         @Override
                         public void run() {
                             if (amount != null){
-                                tx_wallet_slider.setText(Float.toString(amount)+" Pkr");
+                                tx_wallet_slider.setText(" PKR " + Float.toString(amount));
                             }
 
                         }

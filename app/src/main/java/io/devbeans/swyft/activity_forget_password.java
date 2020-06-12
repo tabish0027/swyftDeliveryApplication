@@ -42,7 +42,7 @@ public class activity_forget_password extends AppCompatActivity {
         tx_password = findViewById(R.id.tx_password);
         tx_confirm_password = findViewById(R.id.tx_confirm_password);
         tx_username = findViewById(R.id.tx_username);
-        tx_username.setText("923004820761");
+//        tx_username.setText("923004820761");
         btn_reset_password = findViewById(R.id.btn_reset_password);
         btn_requestotp= findViewById(R.id.btn_requestotp);
         btn_back.setOnClickListener(new View.OnClickListener() {

@@ -32,11 +32,7 @@
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
 
         <activity  android:screenOrientation="portrait" android:name="io.devbeans.swyft.activity_login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity  android:screenOrientation="portrait" android:name="io.devbeans.swyft.activity_barcode_scanner">
 
@@ -46,7 +42,11 @@
         </activity>
 
         <activity  android:screenOrientation="portrait" android:name="io.swyft.swyft.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity  android:screenOrientation="portrait" android:name="io.devbeans.swyft.activity_mapview">
 

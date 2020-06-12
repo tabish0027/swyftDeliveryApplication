@@ -2,6 +2,7 @@ package io.devbeans.swyft;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,10 +20,14 @@ import androidx.core.content.ContextCompat;
 
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.DoubleBounce;
+import com.google.gson.Gson;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.devbeans.swyft.network.ApiController;
 import retrofit2.Call;
@@ -38,10 +43,15 @@ public class activity_login extends AppCompatActivity {
     EditText username , password,ip_con;
     Button btn_forget;
 
+    SharedPreferences sharedpreferences;
+    SharedPreferences.Editor mEditor;
+    public static final String MyPREFERENCES = "MyPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        mEditor = sharedpreferences.edit();
         setContentView(R.layout.activity_login);
         Databackbone.getinstance().contextapp = getApplicationContext();
         btn_login = findViewById(R.id.btn_login);
@@ -55,6 +65,7 @@ public class activity_login extends AppCompatActivity {
         }
         else{
             ip_con.setText(BuildConfig.API_BASE_URL);
+            username.setText("03021412161");password.setText("12345"); // delivery stage
         }
         btn_forget.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,9 +86,6 @@ public class activity_login extends AppCompatActivity {
 
         // user with bugs
         //username.setText("03465175407");password.setText("12345"); // delivery stage
-
-        username.setText("03021412161");password.setText("12345"); // delivery stage
-
 
         Sprite doubleBounce = new DoubleBounce();
         progressBar.setVisibility(View.GONE);
@@ -122,8 +130,7 @@ public class activity_login extends AppCompatActivity {
         login loginCredentials = new login();
         loginCredentials.username = username.getText().toString();
         loginCredentials.password = password.getText().toString();
-
-
+        loginCredentials.ttl = 2592000;
 
         swift_api riderapi = Databackbone.getinstance().getRetrofitbuilder().create(swift_api.class);
 
@@ -137,6 +144,13 @@ public class activity_login extends AppCompatActivity {
                     Databackbone.getinstance().rider = rider;
 
                     if (Databackbone.getinstance().rider.getUser().getType().equalsIgnoreCase("delivery")){
+
+                        Gson gson = new Gson();
+                        List<Rider> riderList = new ArrayList<>();
+                        riderList.add(rider);
+                        String json = gson.toJson(riderList);
+                        mEditor.putString("Rider", json).commit();
+
                         checkVersionControl();
                     }else {
                         Databackbone.getinstance().showAlsertBox(activity_login.this,"error","You are pick up rider. Please use Swyft Pickup App");
@@ -273,6 +287,7 @@ public class activity_login extends AppCompatActivity {
 
                 Intent i = new Intent(activity_login.this, activity_mapview.class);
                 activity_login.this.startActivity(i);
+                finish();
 
         }
         else{

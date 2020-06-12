@@ -16,7 +16,7 @@
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/avenirfile"
         android:gravity="center"
-        android:text="Tabish Bhai"
+        android:text="Ahsan Rafiq"
         android:textColor="#231f20"
         android:textSize="22dp"
         android:textStyle="bold"
@@ -114,6 +114,7 @@
         android:id="@+id/imageView20"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:padding="8dp"
         android:layout_marginBottom="12dp"
         android:src="@drawable/icon_loc_marker"
         app:layout_constraintBottom_toTopOf="@+id/imageView16"
@@ -123,6 +124,8 @@
         android:id="@+id/imageView16"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:padding="8dp"
+
         android:layout_marginBottom="8dp"
         android:src="@drawable/icon_receiver"
         app:layout_constraintBottom_toTopOf="@+id/underbar_parcel"
@@ -131,7 +134,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:background="@color/color_app_theam"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -169,7 +172,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.15" />
+        app:layout_constraintGuide_percent="0.10" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -183,21 +186,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.85" />
+        app:layout_constraintGuide_percent="0.90" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.1" />
+        app:layout_constraintGuide_percent="0.05" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.90" />
+        app:layout_constraintGuide_percent="0.95" />
 
     <Button
         android:id="@+id/btn_week"
@@ -251,6 +254,7 @@
             android:id="@+id/imageView12"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:padding="8dp"
             android:layout_marginTop="12dp"
             android:src="@drawable/icon_profile_scooter"
             app:layout_constraintEnd_toStartOf="@+id/guideline12"
@@ -261,6 +265,7 @@
             android:id="@+id/imageView18"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:padding="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="12dp"
             android:src="@drawable/icon_watch"

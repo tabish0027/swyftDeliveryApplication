@@ -54,12 +54,13 @@
 
     <ImageView
         android:id="@+id/btn_slider_menu"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:clickable="true"
         android:src="@drawable/side_menu_button"
+        android:tint="#99221e1f"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -88,6 +89,7 @@
         android:background="@color/color_app_theam"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
@@ -104,7 +106,7 @@
             android:id="@+id/tx_parcels_status_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="20dp"
             android:fontFamily="@font/avenirfile"
             android:text="No Pending Task"
             android:textColor="@color/color_app_theam_text"

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="border_title">18sp</dimen>
+    <dimen name="border_title">16dp</dimen>
     <dimen name="border_title_back">25dp</dimen>
     <dimen name="divider_thickness">1dp</dimen>
-    <dimen name="app_text_size">13sp</dimen>
+    <dimen name="app_text_size">13dp</dimen>
     <dimen name="form_width">22dp</dimen>
     <dimen name="form_height">22dp</dimen>
 </resources>
