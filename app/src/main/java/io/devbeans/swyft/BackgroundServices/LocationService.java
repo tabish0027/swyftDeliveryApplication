@@ -48,7 +48,7 @@
 //    Location location;
 //    private Handler mHandler = new Handler();
 //    private Timer mTimer = null;
-//    public static String str_receiver = "com.devbeans.covidtracker.BackgroundServices.receiver";
+//    public static String str_receiver = "io.devbeans.swyft.BackgroundServices.receiver";
 //    Intent intent;
 //
 //    GPSTracker gpsTracker;

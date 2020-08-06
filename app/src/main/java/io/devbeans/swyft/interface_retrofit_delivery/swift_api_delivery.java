@@ -2,6 +2,7 @@ package io.devbeans.swyft.interface_retrofit_delivery;
 
 import java.util.List;
 
+import io.devbeans.swyft.data_models.SignatureURLModel;
 import io.devbeans.swyft.interface_retrofit.manage_task;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -54,6 +55,10 @@ public interface swift_api_delivery {
                                                     @Part("uploadContainer") RequestBody uploadContainer,
                                                     @Part("updateOn") RequestBody updateOn
                                                     );
+    @Multipart
+    @POST("file/upload")
+    Call<SignatureURLModel> uploadImage(@Part MultipartBody.Part file,
+                                            @Part("uploadContainer") RequestBody patchModel);
 
 
 }

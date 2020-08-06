@@ -21,7 +21,8 @@
         android:hardwareAccelerated="true"
         android:roundIcon="@mipmap/ic_app_launcher_driver"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+        tools:replace="android:theme">
 
         <uses-library android:name="com.google.android.maps" />
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="@string/map_api_key"/>

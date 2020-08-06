@@ -215,7 +215,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
                 String attandanceID = "";
                 if(Databackbone.getinstance().riderdetails != null)
                     attandanceID = Databackbone.getinstance().riderdetails.getAttendanceId();
-                if(Databackbone.getinstance().rider.getUser().getIsOnline())
+                if(Databackbone.getinstance().riderdetails.getIsOnline())
                      change_Activity_status(attandanceID,true);
                 else
                     change_Activity_status(attandanceID,true);
@@ -416,7 +416,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
 
     }
     public void LoadResume(){
-        if(Databackbone.getinstance().rider != null && Databackbone.getinstance().rider.getUser().getIsOnline())
+        if(Databackbone.getinstance().rider != null && Databackbone.getinstance().riderdetails.getIsOnline())
         {
             ActivateRider();
 
@@ -507,7 +507,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
     }
     public void check_status_of_rider_activity(){
         if(Databackbone.getinstance().rider != null){
-            if(Databackbone.getinstance().rider.getUser().getIsOnline()){
+            if(Databackbone.getinstance().riderdetails.getIsOnline()){
                 ActivateRider();
                 change_Activity_status("",false);
             }

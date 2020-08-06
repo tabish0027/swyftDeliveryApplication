@@ -113,28 +113,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/btn_cross"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/signature_pad"
-                app:srcCompat="@android:drawable/ic_delete" />
 
-            <TextView
+
+            <EditText
                 android:id="@+id/textView11"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
                 android:fontFamily="@font/avenirfile"
                 android:gravity="center"
-                android:text="Please Sign below the dotted line using your finger"
+                android:hint="Please enter reciever's name here!"
                 android:textColor="#231f20"
-                android:textSize="12dp"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:textSize="14dp"
+                android:background="@drawable/search_field_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -173,6 +172,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView17"
                 app:penColor="@android:color/black" />
+            <ImageView
+                android:id="@+id/btn_cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/signature_pad"
+                app:srcCompat="@android:drawable/ic_delete" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

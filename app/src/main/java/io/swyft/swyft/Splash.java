@@ -25,10 +25,13 @@ import io.devbeans.swyft.R;
 import io.devbeans.swyft.activity_login;
 import io.devbeans.swyft.activity_mapview;
 import io.devbeans.swyft.interface_retrofit.Rider;
+import io.devbeans.swyft.interface_retrofit.RiderDetails;
 import io.devbeans.swyft.interface_retrofit.swift_api;
+import io.devbeans.swyft.network.ApiController;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class Splash extends AppCompatActivity {
 
@@ -92,23 +95,7 @@ public class Splash extends AppCompatActivity {
                         return;
                     }
                 }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(Splash.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED)
-                        ActivityCompat.requestPermissions(Splash.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                    else
-                    {
-                        Intent i = new Intent(Splash.this, activity_mapview.class);
-                        Splash.this.startActivity(i);
-                        finish();
-                    }
-                }else {
-                    Intent i = new Intent(Splash.this,activity_mapview.class);
-                    Splash.this.startActivity(i);
-                    finish();
-                }
-
-//                    getRiderDetail();
+                    getRiderDetail();
 
             }
 
@@ -116,6 +103,51 @@ public class Splash extends AppCompatActivity {
             public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println(t.getCause());
                 Databackbone.getinstance().showAlsertBox(Splash.this,"Error","Error Connecting To Server (app-version-check) "+t.getMessage());
+            }
+        });
+    }
+
+    public void getRiderDetail(){
+        Retrofit retrofit = Databackbone.getinstance().getRetrofitbuilder();
+        swift_api riderapi = retrofit.create(swift_api.class);
+
+        Call<RiderDetails> call = riderapi.getRider(Databackbone.getinstance().rider.getId(),Databackbone.getinstance().rider.getUserId());
+        call.enqueue(new Callback<RiderDetails>() {
+            @Override
+            public void onResponse(Call<RiderDetails> call, Response<RiderDetails> response) {
+                if(response.isSuccessful()){
+
+                    RiderDetails riderActivity = response.body();
+                    Databackbone.getinstance().riderdetails = riderActivity;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (ContextCompat.checkSelfPermission(Splash.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED &&
+                                ContextCompat.checkSelfPermission(Splash.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED &&
+                                ContextCompat.checkSelfPermission(Splash.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+                            ActivityCompat.requestPermissions(Splash.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                        else {
+                            Intent i = new Intent(Splash.this, activity_mapview.class);
+                            Splash.this.startActivity(i);
+                            finish();
+                        }
+                    }else {
+                        Intent i = new Intent(Splash.this,activity_mapview.class);
+                        Splash.this.startActivity(i);
+                        finish();
+                    }
+
+                }
+                else{
+                    Databackbone.getinstance().showAlsertBox(Splash.this,"Error","Error Connecting To Server Error Code 33");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<RiderDetails> call, Throwable t) {
+                System.out.println(t.getCause());
+                Databackbone.getinstance().showAlsertBox(Splash.this,"Error","Error Connecting To Server Error Code 34");
+
+                //DeactivateRider();
             }
         });
     }

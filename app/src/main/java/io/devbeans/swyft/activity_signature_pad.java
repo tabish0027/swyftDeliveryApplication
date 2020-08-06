@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -43,12 +44,14 @@ public class activity_signature_pad extends AppCompatActivity {
     ProgressBar progressBar = null;
     Bitmap signature_image = null;
     Boolean has_signature_image = false;
+    EditText textView11;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature);
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
         btn_cross = findViewById(R.id.btn_cross);
+        textView11 = findViewById(R.id.textView11);
         btn_cross.setVisibility(View.GONE);
         btn_submit = findViewById(R.id.btn_submit);
         btn_submit.setOnClickListener(new View.OnClickListener() {
@@ -58,8 +61,12 @@ public class activity_signature_pad extends AppCompatActivity {
                 if(data == null || data.getParcels().size()==0){
                     activity_signature_pad.this.finish();
                 }
-                String Parcelid =  Databackbone.getinstance().getDeliveryParcelsTask().getParcels().get(0).getParcelId();
-                uploadSignature(Parcelid);
+                if (textView11.getText().toString().isEmpty()){
+                    Databackbone.getinstance().showAlsertBox(activity_signature_pad.this,"Error","Enter receiver's name first!");
+                }else {
+                    String Parcelid =  Databackbone.getinstance().getDeliveryParcelsTask().getParcels().get(0).getParcelId();
+                    uploadSignature(Parcelid);
+                }
             }
         });
         progressBar = (ProgressBar)findViewById(R.id.url_loading_animation);
@@ -210,7 +217,7 @@ public class activity_signature_pad extends AppCompatActivity {
             lng = Databackbone.getinstance().current_location.longitude;
         }
 
-        mark_parcel_complete com_parcels = new mark_parcel_complete(parcelIds,action,taskId,lat,  lng, reason);
+        mark_parcel_complete com_parcels = new mark_parcel_complete(parcelIds,action,taskId,lat,  lng, reason, textView11.getText().toString());
 
         Retrofit retrofit = Databackbone.getinstance().getRetrofitbuilder();
         swift_api_delivery riderapi = retrofit.create(swift_api_delivery.class);

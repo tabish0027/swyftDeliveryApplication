@@ -98,6 +98,7 @@ public class Databackbone {
     public delivery_earnings delivery_driver_earning = null;
     public List<delivery_wallet> wallet;
     public List<history> history= new ArrayList<>();
+    public SignatureURLModel cam_image_data =  null;
 
     private Databackbone(){
 
