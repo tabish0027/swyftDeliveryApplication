@@ -21,7 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -38,21 +37,17 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.devbeans.swyft.data_models.SignatureURLModel;
 import io.devbeans.swyft.interface_retrofit_delivery.RiderActivityDelivery;
 import io.devbeans.swyft.interface_retrofit_delivery.mark_parcel_complete;
 import io.devbeans.swyft.interface_retrofit_delivery.swift_api_delivery;
-import io.swyft.swyft.Splash;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.aprilapps.easyphotopicker.MediaFile;
-import pl.aprilapps.easyphotopicker.MediaSource;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,8 +57,8 @@ import static com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotate
 
 public class activity_delivery_status extends AppCompatActivity {
 
-    CheckBox cb_incomplete,cb_consignee,cb_refure,cb_funds;
-    TextView tx_note ;
+    CheckBox cb_incomplete, cb_consignee, cb_refure, cb_funds;
+    TextView tx_note;
     ProgressBar progressBar = null;
     Button btn_submit, btn_image;
     EasyImage easyImage;
@@ -71,6 +66,7 @@ public class activity_delivery_status extends AppCompatActivity {
     URI uri;
     Bitmap cam_image = null;
     String image_url = "abc";
+    String reason = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +82,14 @@ public class activity_delivery_status extends AppCompatActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                markParcelsTonotcomplete();
+                if (tx_note.getText().toString().isEmpty()) {
+                    Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Please insert reason first");
+                } else {
+                    markParcelsTonotcomplete();
+                }
             }
         });
-        progressBar = (ProgressBar)findViewById(R.id.url_loading_animation);
+        progressBar = (ProgressBar) findViewById(R.id.url_loading_animation);
 
         final ImageView btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +118,7 @@ public class activity_delivery_status extends AppCompatActivity {
 
                         Pix.start(activity_delivery_status.this, options);
                     }
-                }else {
+                } else {
                     Options options = Options.init()
                             .setRequestCode(100)                                           //Request code for activity results
                             .setCount(1)                                                   //Number of images to restict selection count
@@ -131,7 +131,6 @@ public class activity_delivery_status extends AppCompatActivity {
                 }
 
 
-
             }
         });
 
@@ -140,7 +139,7 @@ public class activity_delivery_status extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 1 && grantResults[0] == 0 ){
+        if (requestCode == 1 && grantResults[0] == 0) {
 
 
             Options options = Options.init()
@@ -153,9 +152,8 @@ public class activity_delivery_status extends AppCompatActivity {
 
             Pix.start(activity_delivery_status.this, options);
 
-        }
-        else{
-            Databackbone.getinstance().showAlsertBox(activity_delivery_status.this,"Error","Please give permission for location");
+        } else {
+            Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Please give permission for location");
         }
     }
 
@@ -165,7 +163,7 @@ public class activity_delivery_status extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK && requestCode == 100) {
             ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
             try {
-                if (returnValue != null){
+                if (returnValue != null) {
                     uri = new URI(returnValue.get(0));
                     uploadImage();
                 }
@@ -230,7 +228,7 @@ public class activity_delivery_status extends AppCompatActivity {
         }
 
         Bitmap rotatedBitmap = null;
-        switch(orientation) {
+        switch (orientation) {
 
             case ExifInterface.ORIENTATION_ROTATE_90:
                 rotatedBitmap = rotateImage(bitmap, 90);
@@ -290,21 +288,20 @@ public class activity_delivery_status extends AppCompatActivity {
 
                     DisableLoading();
 
-                }
-                else{
+                } else {
                     try {
                         JSONObject jsonObject = new JSONObject(response.errorBody().string());
-                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")) {
 //                            mEditor.clear().commit();
 //                            mEditor_default.clear().commit();
 //                            mEditor_loadsheet.clear().commit();
                             Intent intent = new Intent(activity_delivery_status.this, activity_login.class);
                             startActivity(intent);
                             finishAffinity();
-                        }else {
+                        } else {
                             DisableLoading();
                             //DeactivateRider();
-                            Databackbone.getinstance().showAlsertBox(activity_delivery_status.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                            Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -317,7 +314,7 @@ public class activity_delivery_status extends AppCompatActivity {
             @Override
             public void onFailure(Call<SignatureURLModel> call, Throwable t) {
                 System.out.println(t.getCause());
-                Databackbone.getinstance().showAlsertBox(activity_delivery_status.this,"Error","Error Connecting To Server (file/patch-upload) "+t.getMessage());
+                Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Error Connecting To Server (file/patch-upload) " + t.getMessage());
                 DisableLoading();
 
             }
@@ -326,58 +323,51 @@ public class activity_delivery_status extends AppCompatActivity {
     }
 
 
-    public void markParcelsTonotcomplete( ){
+    public void markParcelsTonotcomplete() {
         btn_submit.setEnabled(false);
         double lat = 0.0;
         double lng = 0.0;
         final List<String> parcelIds = Databackbone.getinstance().parcel_to_process;
-        String reason = "";
 
-        if (tx_note.getText().toString().isEmpty()){
-            reason = "N/A";
-        }else {
-            reason = tx_note.getText().toString();
-        }
-
+        reason = tx_note.getText().toString();
 
         String action = Databackbone.getinstance().not_delivered_reason;
         //String taskId = Databackbone.getinstance().parcelsdelivery.get(Databackbone.getinstance().task_to_show).getTaskId();
         String taskId = Databackbone.getinstance().getDeliveryTask().getTaskId();
 
-        if(parcelIds.size() == 0)
-        {
+        if (parcelIds.size() == 0) {
             Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Server code error 102");
             DisableLoading();
             return;
         }
 
-        if(Databackbone.getinstance().current_location != null){
+        if (Databackbone.getinstance().current_location != null) {
             lat = Databackbone.getinstance().current_location.latitude;
             lng = Databackbone.getinstance().current_location.longitude;
         }
         String date = "19-11-2019";
         String phase = "Morning";
         List<String> checkbox = new ArrayList<>();
-        if(cb_incomplete.isChecked())
+        if (cb_incomplete.isChecked())
             checkbox.add("Incomplete address");
-        if(cb_consignee.isChecked())
+        if (cb_consignee.isChecked())
             checkbox.add("consignee not Available");
-        if(cb_refure.isChecked())
+        if (cb_refure.isChecked())
             checkbox.add("Refused to receive the parcel");
-        if(cb_funds.isChecked())
+        if (cb_funds.isChecked())
             checkbox.add("Insufficient funds");
 
 
-        mark_parcel_complete com_parcels = new mark_parcel_complete(image_url, parcelIds,action,taskId,lat,  lng, reason,date,phase,checkbox);
+        mark_parcel_complete com_parcels = new mark_parcel_complete(image_url, parcelIds, action, taskId, lat, lng, reason, date, phase, checkbox);
 
         Retrofit retrofit = Databackbone.getinstance().getRetrofitbuilder();
         swift_api_delivery riderapi = retrofit.create(swift_api_delivery.class);
         EnableLoading();
-        Call<List<RiderActivityDelivery>> call = riderapi.markParcelComplete(Databackbone.getinstance().rider.getId(),com_parcels);
+        Call<List<RiderActivityDelivery>> call = riderapi.markParcelComplete(Databackbone.getinstance().rider.getId(), com_parcels);
         call.enqueue(new Callback<List<RiderActivityDelivery>>() {
             @Override
             public void onResponse(Call<List<RiderActivityDelivery>> call, Response<List<RiderActivityDelivery>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
 
                     List<RiderActivityDelivery> parcels = response.body();
                     Databackbone.getinstance().parcelsdelivery = parcels;
@@ -400,18 +390,17 @@ public class activity_delivery_status extends AppCompatActivity {
                             .show();
 
 
-                }
-                else{
+                } else {
                     try {
                         JSONObject jsonObject = new JSONObject(response.errorBody().string());
-                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")){
+                        if (jsonObject.getJSONObject("error").getString("statusCode").equals("401") || jsonObject.getJSONObject("error").getString("statusCode").equals("404")) {
                             Intent intent = new Intent(activity_delivery_status.this, activity_login.class);
                             startActivity(intent);
                             finishAffinity();
-                        }else {
+                        } else {
                             DisableLoading();
                             //DeactivateRider();
-                            Databackbone.getinstance().showAlsertBox(activity_delivery_status.this,jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                            Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -425,21 +414,22 @@ public class activity_delivery_status extends AppCompatActivity {
             public void onFailure(Call<List<RiderActivityDelivery>> call, Throwable t) {
                 System.out.println(t.getCause());
                 btn_submit.setEnabled(true);
-                Databackbone.getinstance().showAlsertBox(activity_delivery_status.this,"Error","Error Connecting To Server (Parcels/manage-parcel) "+t.getMessage());
+                Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Error Connecting To Server (Parcels/manage-parcel) " + t.getMessage());
                 DisableLoading();
             }
         });
 
     }
 
-    public void DisableLoading(){
+    public void DisableLoading() {
 
         progressBar.setVisibility(View.GONE);
         btn_submit.setEnabled(true);
         btn_image.setEnabled(true);
 
     }
-    public void EnableLoading(){
+
+    public void EnableLoading() {
 
         progressBar.setVisibility(View.VISIBLE);
         btn_submit.setEnabled(false);
