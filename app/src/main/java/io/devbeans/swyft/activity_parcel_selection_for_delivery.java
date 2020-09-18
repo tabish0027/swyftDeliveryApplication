@@ -26,6 +26,7 @@ public class activity_parcel_selection_for_delivery extends AppCompatActivity {
     RecyclerView rv_list_parcels;
     ConstraintLayout btn_diselect_all,btn_select_all;
     TextView tx_count_delivered;
+    String amount_str;
     adapter_status_daily_packages_delivery_selection ad_orders_selections;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class activity_parcel_selection_for_delivery extends AppCompatActivity {
             public void onClick(View v) {
                 mark_parcels_to_process();
                 Intent declined = new Intent(activity_parcel_selection_for_delivery.this, activity_signature_pad.class);
+                declined.putExtra("amount", amount_str);
                 declined.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 declined.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 activity_parcel_selection_for_delivery.this.startActivity(declined);
@@ -161,6 +163,7 @@ public class activity_parcel_selection_for_delivery extends AppCompatActivity {
 
         tx_count_delivered.setText(Integer.toString(Totalparcels));
         tx_amount_to_collect.setText(Integer.toString(TotalAmount));
+        amount_str = Integer.toString(TotalAmount);
         ad_orders_selections.update_list();
 
     }
@@ -181,6 +184,7 @@ public class activity_parcel_selection_for_delivery extends AppCompatActivity {
 
         tx_count_delivered.setText(Integer.toString(Totalparcels));
         tx_amount_to_collect.setText(Integer.toString(TotalAmount));
+        amount_str = Integer.toString(TotalAmount);
         ad_orders_selections.update_list();
         if(checkIforderActive()){
             disable_process_button();
@@ -215,6 +219,7 @@ public class activity_parcel_selection_for_delivery extends AppCompatActivity {
 
         tx_count_delivered.setText(Integer.toString(Totalparcels));
         tx_amount_to_collect.setText(Integer.toString(TotalAmount));
+        amount_str = Integer.toString(TotalAmount);
         ad_orders_selections.update_list();
 
     }

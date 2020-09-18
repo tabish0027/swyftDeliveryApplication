@@ -65,7 +65,7 @@ public class activity_delivery_status extends AppCompatActivity {
     ArrayList<MediaFile> ImagereturnValue = new ArrayList<>();
     URI uri;
     Bitmap cam_image = null;
-    String image_url = "abc";
+    String image_url = "";
     String reason = "";
 
     @Override
@@ -83,9 +83,17 @@ public class activity_delivery_status extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (tx_note.getText().toString().isEmpty()) {
-                    Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Please insert reason first");
+                    Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Please insert reason first!");
                 } else {
-                    markParcelsTonotcomplete();
+                    if (image_url != null){
+                        if (!image_url.isEmpty()){
+                            markParcelsTonotcomplete();
+                        }else {
+                            Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Capture image first!");
+                        }
+                    }else {
+                        Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Capture image first!");
+                    }
                 }
             }
         });
@@ -357,6 +365,7 @@ public class activity_delivery_status extends AppCompatActivity {
         if (cb_funds.isChecked())
             checkbox.add("Insufficient funds");
 
+        Log.e("captured_image", image_url);
 
         mark_parcel_complete com_parcels = new mark_parcel_complete(image_url, parcelIds, action, taskId, lat, lng, reason, date, phase, checkbox);
 

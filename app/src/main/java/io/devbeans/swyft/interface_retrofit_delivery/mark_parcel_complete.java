@@ -18,7 +18,7 @@ public class mark_parcel_complete {
     public String phase = "";
     public String receivedBy = "";
     public List<String> checkboxDataArray = null;
-    public mark_parcel_complete(List<String> parcelIds, String status, String taskId, double lat, double lng, String reason, String receivedBy) {
+    public mark_parcel_complete(String image, List<String> parcelIds, String status, String taskId, double lat, double lng, String reason, String receivedBy) {
         this.parcelIds = parcelIds;
         this.status = status;
         this.taskId = taskId;
@@ -26,6 +26,7 @@ public class mark_parcel_complete {
         this.lng = lng;
         this.reason = reason;
         this.receivedBy = receivedBy;
+        this.image = image;
 
     }
 

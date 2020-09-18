@@ -16,6 +16,18 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <Button
+        android:id="@+id/capture_image"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_round"
+        android:text="Capture Image"
+        android:textColor="#ffffff"
+        app:layout_constraintBottom_toTopOf="@id/btn_submit"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline" />
+
+    <Button
         android:id="@+id/btn_submit"
         android:layout_width="0dp"
         android:layout_height="40dp"
@@ -98,7 +110,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/round_daily_package_active"
-        app:layout_constraintBottom_toTopOf="@+id/btn_submit"
+        app:layout_constraintBottom_toTopOf="@+id/capture_image"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
