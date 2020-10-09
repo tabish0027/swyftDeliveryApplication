@@ -67,6 +67,7 @@ public class activity_delivery_status extends AppCompatActivity {
     Bitmap cam_image = null;
     String image_url = "";
     String reason = "";
+    List<String> checkbox = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +83,26 @@ public class activity_delivery_status extends AppCompatActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (cb_incomplete.isChecked())
+                    checkbox.add("Incomplete address");
+                if (cb_consignee.isChecked())
+                    checkbox.add("consignee not Available");
+                if (cb_refure.isChecked())
+                    checkbox.add("Refused to receive the parcel");
+                if (cb_funds.isChecked())
+                    checkbox.add("Insufficient funds");
+
                 if (tx_note.getText().toString().isEmpty()) {
                     Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Please insert reason first!");
                 } else {
                     if (image_url != null){
                         if (!image_url.isEmpty()){
-                            markParcelsTonotcomplete();
+                            if (!checkbox.isEmpty()){
+                                markParcelsTonotcomplete();
+                            }else {
+                                Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Select a reason from the options first!");
+                            }
                         }else {
                             Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Error", "Capture image first!");
                         }
@@ -348,22 +363,13 @@ public class activity_delivery_status extends AppCompatActivity {
             DisableLoading();
             return;
         }
-
         if (Databackbone.getinstance().current_location != null) {
             lat = Databackbone.getinstance().current_location.latitude;
             lng = Databackbone.getinstance().current_location.longitude;
         }
         String date = "19-11-2019";
         String phase = "Morning";
-        List<String> checkbox = new ArrayList<>();
-        if (cb_incomplete.isChecked())
-            checkbox.add("Incomplete address");
-        if (cb_consignee.isChecked())
-            checkbox.add("consignee not Available");
-        if (cb_refure.isChecked())
-            checkbox.add("Refused to receive the parcel");
-        if (cb_funds.isChecked())
-            checkbox.add("Insufficient funds");
+
 
         Log.e("captured_image", image_url);
 

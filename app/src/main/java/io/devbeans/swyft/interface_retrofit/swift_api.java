@@ -22,6 +22,9 @@ public interface swift_api {
     @GET("Riders/{riderId}")
     Call<RiderDetails> getRider(@Header("Authorization") String Authorization,@Path("riderId") String riderId);
 
+    @POST("Riders/logout")
+    Call<String> logout(@Query("access_token") String accesstoken);
+
     @GET("app-version-check")
     Call<Void> getversioncontrol(@Header("Authorization") String Authorization, @Query("version") String version);
 

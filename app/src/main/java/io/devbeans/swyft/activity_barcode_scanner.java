@@ -135,7 +135,7 @@ public class activity_barcode_scanner extends AppCompatActivity implements ZXing
     public void onResume() {
         super.onResume();
         mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
-        mScannerView.startCamera();          // Start camera on resume
+        mScannerView.startCamera();// Start camera on resume
 
     }
 

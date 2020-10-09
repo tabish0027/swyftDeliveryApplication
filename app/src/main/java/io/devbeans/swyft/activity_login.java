@@ -251,7 +251,7 @@ public class activity_login extends AppCompatActivity {
             public void onFailure(Call<RiderDetails> call, Throwable t) {
                 System.out.println(t.getCause());
                 EnableLogin();
-                Databackbone.getinstance().showAlsertBox(activity_login.this,"Error","Error Connecting To Server Error Code 34");
+                Databackbone.getinstance().showAlsertBox(activity_login.this,"Error","Error Connecting To Server Error " + t.getMessage());
 
                 //DeactivateRider();
             }

@@ -171,11 +171,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         Task5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mEditor.clear().apply();
-                Databackbone.resetStaticPoint();
-                Intent intent = new Intent(activity_mapview.this, activity_login.class);
-                startActivity(intent);
-                activity_mapview.this.finish();
+                Logout();
             }
         });
         btn_get_current_locationc.setOnClickListener(new View.OnClickListener() {
@@ -311,6 +307,50 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
 
 
     }
+
+    public void Logout() {
+
+        EnableLoading();
+
+        Retrofit retrofit = Databackbone.getinstance().getRetrofitbuilder();
+        swift_api logoutAPI = retrofit.create(swift_api.class);
+
+        String accessToken = Databackbone.getinstance().rider.getId();
+
+        Call<String> call = logoutAPI.logout(Databackbone.getinstance().rider.getId());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+
+                    mEditor.clear().apply();
+                    Databackbone.resetStaticPoint();
+                    Intent intent = new Intent(activity_mapview.this, activity_login.class);
+                    startActivity(intent);
+                    finishAffinity();
+
+                }
+                else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        Databackbone.getinstance().showAlsertBox(activity_mapview.this, jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    DisableLoading();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                System.out.println(t.getCause());
+                DisableLoading();
+                Databackbone.getinstance().showAlsertBox(activity_mapview.this, "Error", "Error Connecting To Server (Riders/logout) " + t.getMessage());
+            }
+        });
+    }
+
     // override and call airLocation object's method by the same name
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
