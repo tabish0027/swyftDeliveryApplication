@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -68,6 +69,16 @@ public class activity_delivery_status extends AppCompatActivity {
     String image_url = "";
     String reason = "";
     List<String> checkbox = new ArrayList<>();
+    boolean apiCall = false;
+
+    @Override
+    public void onBackPressed() {
+        if (apiCall){
+            Databackbone.getinstance().showAlsertBox(activity_delivery_status.this, "Caution", "Please wait while the process is completed!");
+        }else {
+            finish();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +98,7 @@ public class activity_delivery_status extends AppCompatActivity {
                 if (cb_incomplete.isChecked())
                     checkbox.add("Incomplete address");
                 if (cb_consignee.isChecked())
-                    checkbox.add("consignee not Available");
+                    checkbox.add("Consignee not Available");
                 if (cb_refure.isChecked())
                     checkbox.add("Refused to receive the parcel");
                 if (cb_funds.isChecked())
@@ -126,11 +137,68 @@ public class activity_delivery_status extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(activity_delivery_status.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED &&
-                            ContextCompat.checkSelfPermission(activity_delivery_status.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-                        ActivityCompat.requestPermissions(activity_delivery_status.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                    else {
+                if (!image_url.isEmpty()){
+
+                    new AlertDialog.Builder(activity_delivery_status.this)
+                            .setTitle("Caution")
+                            .setMessage("Are you sure you want to replace the already uploaded image?")
+
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        if (ContextCompat.checkSelfPermission(activity_delivery_status.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED &&
+                                                ContextCompat.checkSelfPermission(activity_delivery_status.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+                                            ActivityCompat.requestPermissions(activity_delivery_status.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                        else {
+                                            Options options = Options.init()
+                                                    .setRequestCode(100)                                           //Request code for activity results
+                                                    .setCount(1)                                                   //Number of images to restict selection count
+                                                    .setFrontfacing(false)                                         //Front Facing camera on start
+                                                    .setExcludeVideos(true)                                       //Option to exclude videos
+                                                    .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
+                                                    .setPath("/pix/images");                                       //Custom Path For media Storage
+
+                                            Pix.start(activity_delivery_status.this, options);
+                                        }
+                                    } else {
+                                        Options options = Options.init()
+                                                .setRequestCode(100)                                           //Request code for activity results
+                                                .setCount(1)                                                   //Number of images to restict selection count
+                                                .setFrontfacing(false)                                         //Front Facing camera on start
+                                                .setExcludeVideos(true)                                       //Option to exclude videos
+                                                .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
+                                                .setPath("/pix/images");                                       //Custom Path For media Storage
+
+                                        Pix.start(activity_delivery_status.this, options);
+                                    }
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+                }else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (ContextCompat.checkSelfPermission(activity_delivery_status.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED &&
+                                ContextCompat.checkSelfPermission(activity_delivery_status.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+                            ActivityCompat.requestPermissions(activity_delivery_status.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                        else {
+                            Options options = Options.init()
+                                    .setRequestCode(100)                                           //Request code for activity results
+                                    .setCount(1)                                                   //Number of images to restict selection count
+                                    .setFrontfacing(false)                                         //Front Facing camera on start
+                                    .setExcludeVideos(true)                                       //Option to exclude videos
+                                    .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
+                                    .setPath("/pix/images");                                       //Custom Path For media Storage
+
+                            Pix.start(activity_delivery_status.this, options);
+                        }
+                    } else {
                         Options options = Options.init()
                                 .setRequestCode(100)                                           //Request code for activity results
                                 .setCount(1)                                                   //Number of images to restict selection count
@@ -141,19 +209,7 @@ public class activity_delivery_status extends AppCompatActivity {
 
                         Pix.start(activity_delivery_status.this, options);
                     }
-                } else {
-                    Options options = Options.init()
-                            .setRequestCode(100)                                           //Request code for activity results
-                            .setCount(1)                                                   //Number of images to restict selection count
-                            .setFrontfacing(false)                                         //Front Facing camera on start
-                            .setExcludeVideos(true)                                       //Option to exclude videos
-                            .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
-                            .setPath("/pix/images");                                       //Custom Path For media Storage
-
-                    Pix.start(activity_delivery_status.this, options);
                 }
-
-
             }
         });
 
@@ -309,6 +365,10 @@ public class activity_delivery_status extends AppCompatActivity {
                     image_url = Databackbone.getinstance().cam_image_data.getMessage();
                     Log.e("UploadImage", image_url);
 
+                    Drawable img = getResources().getDrawable(R.drawable.tick);
+                    img.setBounds(0, 0, 40, 40);
+                    btn_image.setCompoundDrawables(null, null, img, null);
+
                     DisableLoading();
 
                 } else {
@@ -441,6 +501,7 @@ public class activity_delivery_status extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
         btn_submit.setEnabled(true);
         btn_image.setEnabled(true);
+        apiCall = false;
 
     }
 
@@ -449,6 +510,7 @@ public class activity_delivery_status extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         btn_submit.setEnabled(false);
         btn_image.setEnabled(false);
+        apiCall = true;
 
     }
 }
