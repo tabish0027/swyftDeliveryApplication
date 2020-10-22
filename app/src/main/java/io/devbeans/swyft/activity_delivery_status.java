@@ -150,6 +150,7 @@ public class activity_delivery_status extends AppCompatActivity {
                                                 ContextCompat.checkSelfPermission(activity_delivery_status.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
                                             ActivityCompat.requestPermissions(activity_delivery_status.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                                         else {
+                                            image_url = "";
                                             Options options = Options.init()
                                                     .setRequestCode(100)                                           //Request code for activity results
                                                     .setCount(1)                                                   //Number of images to restict selection count
@@ -161,6 +162,7 @@ public class activity_delivery_status extends AppCompatActivity {
                                             Pix.start(activity_delivery_status.this, options);
                                         }
                                     } else {
+                                        image_url = "";
                                         Options options = Options.init()
                                                 .setRequestCode(100)                                           //Request code for activity results
                                                 .setCount(1)                                                   //Number of images to restict selection count
@@ -176,7 +178,6 @@ public class activity_delivery_status extends AppCompatActivity {
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
                                 }
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)

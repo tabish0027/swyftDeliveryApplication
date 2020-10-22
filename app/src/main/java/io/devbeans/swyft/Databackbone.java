@@ -1,13 +1,21 @@
 package io.devbeans.swyft;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.DistanceMatrixApiRequest;
 import com.google.maps.GeoApiContext;
@@ -168,6 +176,12 @@ public class Databackbone {
         }
 
     }
+
+    public void CheckUpdateVersion(Context context){
+
+    }
+
+
     public void showAlsertBox(Context contect , String title , String message ){
         new AlertDialog.Builder(contect)
                 .setTitle(title)

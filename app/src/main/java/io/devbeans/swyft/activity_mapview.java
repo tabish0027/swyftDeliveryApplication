@@ -1,13 +1,17 @@
 package io.devbeans.swyft;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +22,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -34,6 +39,12 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
 import com.squareup.picasso.Picasso;
 
 import androidx.navigation.ui.AppBarConfiguration;
@@ -57,12 +68,12 @@ import io.devbeans.swyft.interface_retrofit_delivery.*;
 public class activity_mapview extends Activity implements OnMapReadyCallback {
     GoogleMap mMapServiceView;
     MapView mMapView;
-    ImageView img_rider_activity_button,btn_navigation;
+    ImageView img_rider_activity_button, btn_navigation;
 
     ConstraintLayout offlineTag = null;
-    ConstraintLayout Task1,Task2,Task3,Task4,Task5 = null;
-    ConstraintLayout btn_wallet,btn_earning = null;
-    TextView tx_username,tx_rating = null;
+    ConstraintLayout Task1, Task2, Task3, Task4, Task5 = null;
+    ConstraintLayout btn_wallet, btn_earning = null;
+    TextView tx_username, tx_rating = null;
     ProgressBar progressBar = null;
 
     SharedPreferences sharedpreferences;
@@ -75,8 +86,8 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
     private DrawerLayout mDrawerLayout;
     ConstraintLayout pendingTask;
     private AirLocation airLocation;
-    ImageView btn_get_current_locationc,profile_image2;
-    TextView tx_parcels_status_count,tx_earning_slider,tx_wallet_slider;
+    ImageView btn_get_current_locationc, profile_image2;
+    TextView tx_parcels_status_count, tx_earning_slider, tx_wallet_slider;
     Marker marker_destination_location = null;
 
     Float amount = null;
@@ -86,9 +97,9 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
-        }else {
+        } else {
             finish();
         }
     }
@@ -98,43 +109,76 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         sharedpreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         mEditor = sharedpreferences.edit();
+
+        // update dialog
+
+        int MY_REQUEST_CODE = 1234;
+
+        // Creates instance of the manager.
+        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(activity_mapview.this);
+
+// Returns an intent object that you use to check for an update.
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
+// Checks that the platform will allow the specified type of update.
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    // For a flexible update, use AppUpdateType.FLEXIBLE
+                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                // Request the update.
+                // Request an immediate update.
+                try {
+                    appUpdateManager.startUpdateFlowForResult(
+                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                            appUpdateInfo,
+                            // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+                            AppUpdateType.IMMEDIATE,
+                            // The current activity making the update request.
+                            activity_mapview.this,
+                            // Include a request code to later monitor this update request.
+                            MY_REQUEST_CODE);
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        // update dialog
+
         setContentView(R.layout.activity_map_drawer);
-        mMapView =  findViewById(R.id.ridermapView);
+        mMapView = findViewById(R.id.ridermapView);
         offlineTag = findViewById(R.id.img_rider_activity_button_State);
         img_rider_activity_button = findViewById(R.id.img_rider_activity_button);
         navigationView = findViewById(R.id.nav_view);
         pendingTask = findViewById(R.id.pendingTask);
         btn_get_current_locationc = findViewById(R.id.btn_get_current_locationc);
         profile_image2 = findViewById(R.id.profile_image2);
-        Task1= findViewById(R.id.item1);
-        Task2= findViewById(R.id.item2);
-        Task3= findViewById(R.id.item3);
-        Task4= findViewById(R.id.item4);
-        Task5= findViewById(R.id.item5);
+        Task1 = findViewById(R.id.item1);
+        Task2 = findViewById(R.id.item2);
+        Task3 = findViewById(R.id.item3);
+        Task4 = findViewById(R.id.item4);
+        Task5 = findViewById(R.id.item5);
         btn_navigation = findViewById(R.id.btn_navigation);
         tx_username = findViewById(R.id.tx_username_slider);
-        progressBar = (ProgressBar)findViewById(R.id.url_loading_animation);
-        btn_wallet= findViewById(R.id.btn_wallet);
-        btn_earning= findViewById(R.id.btn_earning);
+        progressBar = (ProgressBar) findViewById(R.id.url_loading_animation);
+        btn_wallet = findViewById(R.id.btn_wallet);
+        btn_earning = findViewById(R.id.btn_earning);
         btn_earning.setVisibility(View.GONE);
         tx_rating = findViewById(R.id.tx_rating);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.slider_menu);
         btn_slider_menu = findViewById(R.id.btn_slider_menu);
         tx_parcels_status_count = findViewById(R.id.tx_parcels_status_count);
         progressBar.setVisibility(View.GONE);
-        tx_earning_slider= findViewById(R.id.tx_earning_slider);
-        tx_wallet_slider= findViewById(R.id.tx_wallet_slider);
-       // generate_test_Data_for_daily();
+        tx_earning_slider = findViewById(R.id.tx_earning_slider);
+        tx_wallet_slider = findViewById(R.id.tx_wallet_slider);
+        // generate_test_Data_for_daily();
         startService(new Intent(this, maneger_location.class));
-        if(Databackbone.getinstance().ar_orders_daily.size() > 0)
-        {
-           // check_parcel_scanning_complete = true;
+        if (Databackbone.getinstance().ar_orders_daily.size() > 0) {
+            // check_parcel_scanning_complete = true;
             //tx_parcels_status_count.setText(Integer.toString(Databackbone.getinstance().ar_orders_daily.size()) + " Pickups Remaining");
-        }
-        else
-        {
+        } else {
             //check_parcel_scanning_complete = false;
-           // tx_parcels_status_count.setText(Integer.toString(0) + " Scanning Parcels");
+            // tx_parcels_status_count.setText(Integer.toString(0) + " Scanning Parcels");
 
         }
 
@@ -143,21 +187,21 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         Task1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activity_order_status = new Intent(activity_mapview.this,activity_order_status.class);
+                Intent activity_order_status = new Intent(activity_mapview.this, activity_order_status.class);
                 activity_mapview.this.startActivity(activity_order_status);
             }
         });
         Task2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openaactivity = new Intent(activity_mapview.this,activity_help.class);
+                Intent openaactivity = new Intent(activity_mapview.this, activity_help.class);
                 //activity_mapview.this.startActivity(openaactivity);
             }
         });
         Task3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openaactivity = new Intent(activity_mapview.this,activity_faq.class);
+                Intent openaactivity = new Intent(activity_mapview.this, activity_faq.class);
                 //activity_mapview.this.startActivity(openaactivity);
             }
         });
@@ -183,7 +227,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         btn_wallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openaactivity = new Intent(activity_mapview.this,activity_wallet_orders.class);
+                Intent openaactivity = new Intent(activity_mapview.this, activity_wallet_orders.class);
                 activity_mapview.this.startActivity(openaactivity);
             }
         });
@@ -191,7 +235,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         btn_earning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openaactivity = new Intent(activity_mapview.this,activity_earning.class);
+                Intent openaactivity = new Intent(activity_mapview.this, activity_earning.class);
                 activity_mapview.this.startActivity(openaactivity);
             }
         });
@@ -209,12 +253,12 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
             public void onClick(View v) {
                 EnableLoading();
                 String attandanceID = "";
-                if(Databackbone.getinstance().riderdetails != null)
+                if (Databackbone.getinstance().riderdetails != null)
                     attandanceID = Databackbone.getinstance().riderdetails.getAttendanceId();
-                if(Databackbone.getinstance().riderdetails.getIsOnline())
-                     change_Activity_status(attandanceID,true);
+                if (Databackbone.getinstance().riderdetails.getIsOnline())
+                    change_Activity_status(attandanceID, true);
                 else
-                    change_Activity_status(attandanceID,true);
+                    change_Activity_status(attandanceID, true);
 
             }
         });
@@ -236,7 +280,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         profile_image2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openBarCode = new Intent(activity_mapview.this,activity_profile.class);
+                Intent openBarCode = new Intent(activity_mapview.this, activity_profile.class);
                 activity_mapview.this.startActivity(openBarCode);
                 //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
 
@@ -246,7 +290,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         pendingTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Databackbone.getinstance().rider.getUser().getIsOnline()){
+                if (Databackbone.getinstance().rider.getUser().getIsOnline()) {
                     Intent pendingtask = null;
                     if (Databackbone.getinstance().check_parcel_scanning_complete) {
                         pendingtask = new Intent(activity_mapview.this, activity_daily_task_status.class);
@@ -261,8 +305,8 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
                         activity_mapview.this.startActivity(pendingtask);
                         overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                     }
-                }else{
-                    Databackbone.getinstance().showAlsertBox(activity_mapview.this,"Error","Your Are Not Online");
+                } else {
+                    Databackbone.getinstance().showAlsertBox(activity_mapview.this, "Error", "Your Are Not Online");
                 }
 
             }
@@ -274,16 +318,16 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
         String load = Databackbone.getinstance().rider.getUser().getProfilePicture();
         tx_username.setText(Databackbone.getinstance().rider.getUser().getFirstName() + " " + Databackbone.getinstance().rider.getUser().getLastName());
 //        Picasso.with(this).load(Databackbone.getinstance().rider.getUser().getProfilePicture()).error(R.drawable.icon_profile_image_offline).into(profile_image2);
-        if (Databackbone.getinstance().rider.getUser().getType().equalsIgnoreCase("delivery")){
+        if (Databackbone.getinstance().rider.getUser().getType().equalsIgnoreCase("delivery")) {
             tx_rating.setText("Delivery Rider");
         }
         btn_navigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(marker_destination_location != null){
+                if (marker_destination_location != null) {
                     new AlertDialog.Builder(activity_mapview.this)
                             .setTitle("Navigation Request")
-                            .setMessage("Activate Navigation for " + marker_destination_location.getTitle() )
+                            .setMessage("Activate Navigation for " + marker_destination_location.getTitle())
 
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -329,8 +373,7 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
                     startActivity(intent);
                     finishAffinity();
 
-                }
-                else {
+                } else {
                     try {
                         JSONObject jsonObject = new JSONObject(response.errorBody().string());
                         Databackbone.getinstance().showAlsertBox(activity_mapview.this, jsonObject.getJSONObject("error").getString("statusCode"), jsonObject.getJSONObject("error").getString("message"));
@@ -355,7 +398,49 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        airLocation.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1234) {
+            if (resultCode != RESULT_OK) {
+                Log.d("Update", "Update flow failed! Result code: " + resultCode);
+                // If the update is cancelled or fails,
+                // you can request to start the update again.
+                // update dialog
+
+                int MY_REQUEST_CODE = 1234;
+
+                // Creates instance of the manager.
+                AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(activity_mapview.this);
+
+// Returns an intent object that you use to check for an update.
+                Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
+// Checks that the platform will allow the specified type of update.
+                appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+                    if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                            // For a flexible update, use AppUpdateType.FLEXIBLE
+                            && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                        // Request the update.
+                        // Request an immediate update.
+                        try {
+                            appUpdateManager.startUpdateFlowForResult(
+                                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                                    appUpdateInfo,
+                                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+                                    AppUpdateType.IMMEDIATE,
+                                    // The current activity making the update request.
+                                    activity_mapview.this,
+                                    // Include a request code to later monitor this update request.
+                                    MY_REQUEST_CODE);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                // update dialog
+            }
+        } else {
+            airLocation.onActivityResult(requestCode, resultCode, data);
+        }
 
     }
 
@@ -367,15 +452,15 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
 
     }
 
-    public void getCurrentLocation(){
+    public void getCurrentLocation() {
         airLocation = new AirLocation(this, true, true, new AirLocation.Callbacks() {
             @Override
-            public void onSuccess( Location location) {
-                if(location == null || mMapServiceView == null)
-                    return ;
-                LatLng current_location = new LatLng(location.getLatitude(),location.getLongitude());
+            public void onSuccess(Location location) {
+                if (location == null || mMapServiceView == null)
+                    return;
+                LatLng current_location = new LatLng(location.getLatitude(), location.getLongitude());
                 Databackbone.getinstance().current_location = current_location;
-                Databackbone.getinstance().CalculateLocationFromPickupParcels(Databackbone.getinstance().parcels );
+                Databackbone.getinstance().CalculateLocationFromPickupParcels(Databackbone.getinstance().parcels);
 
                 //mMapServiceView.addMarker(new MarkerOptions().position(current_location).title("Current Location"));
                 //mMapServiceView.moveCamera(CameraUpdateFactory.newLatLngZoom(current_location, 15));
@@ -385,37 +470,48 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
             }
 
             @Override
-            public void onFailed( AirLocation.LocationFailedEnum locationFailedEnum) {
+            public void onFailed(AirLocation.LocationFailedEnum locationFailedEnum) {
                 // do something
                 String message = locationFailedEnum.name();
                 System.out.println(message);
             }
         });
 
-}
-    public void ActivateRider(){
+    }
+
+    public void ActivateRider() {
         img_rider_activity_button.setImageResource(R.drawable.icon_rider_event_start);
         offlineTag.setVisibility(View.GONE);
     }
 
-    public void DeactivateRider(){
+    public void DeactivateRider() {
         img_rider_activity_button.setImageResource(R.drawable.icon_rider_event_stop);
         offlineTag.setVisibility(View.VISIBLE);
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMapServiceView = googleMap;
         mMapServiceView.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if(marker.getTitle().contains("Pickup"))
-                {
+                if (marker.getTitle().contains("Pickup")) {
                     //btn_navigation.setVisibility(View.VISIBLE);
                     marker_destination_location = marker;
                 }
                 return false;
             }
         });
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         mMapServiceView.setMyLocationEnabled(true);
         mMapServiceView.getUiSettings().setMyLocationButtonEnabled(false);
 
