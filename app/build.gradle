@@ -10,7 +10,7 @@ android {
         applicationId "io.swyft.swyft"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 35
+        versionCode 37
         versionName "0.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -81,6 +81,8 @@ dependencies {
 
     // check for update through playstore
     implementation 'com.google.android.play:core:1.8.2'
+
+    implementation 'com.makeramen:roundedimageview:2.3.0'
 
     /*
     implementation "com.mikepenz:materialdrawer:${lastestMaterialDrawerRelease}"

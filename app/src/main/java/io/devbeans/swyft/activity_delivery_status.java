@@ -3,13 +3,17 @@ package io.devbeans.swyft;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -28,6 +32,7 @@ import androidx.core.content.ContextCompat;
 
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -245,7 +250,70 @@ public class activity_delivery_status extends AppCompatActivity {
             try {
                 if (returnValue != null) {
                     uri = new URI(returnValue.get(0));
-                    uploadImage();
+
+                    File file = new File(returnValue.get(0));
+
+                    final Dialog dialog = new Dialog(activity_delivery_status.this, android.R.style.ThemeOverlay_Material_Dialog_Alert);
+                    dialog.setContentView(R.layout.captured_image_dialog);
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog.setCancelable(true);
+                    dialog.show();
+
+                    Button btn_ok = dialog.findViewById(R.id.btn_ok);
+                    Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+
+                    ImageView captured_image = dialog.findViewById(R.id.captured_image);
+
+//                    Picasso.with(activity_delivery_status.this).load(file.getAbsolutePath()).into(captured_image);
+                    if (file.exists()){
+                        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                        ExifInterface ei = null;
+                        int orientation = 0;
+                        try {
+                            ei = new ExifInterface(file.getAbsolutePath());
+                            orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                    ExifInterface.ORIENTATION_UNDEFINED);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        Bitmap rotatedBitmap = null;
+                        switch (orientation) {
+
+                            case ExifInterface.ORIENTATION_ROTATE_90:
+                                rotatedBitmap = rotateImage(bitmap, 90);
+                                break;
+
+                            case ExifInterface.ORIENTATION_ROTATE_180:
+                                rotatedBitmap = rotateImage(bitmap, 180);
+                                break;
+
+                            case ExifInterface.ORIENTATION_ROTATE_270:
+                                rotatedBitmap = rotateImage(bitmap, 270);
+                                break;
+
+                            case ExifInterface.ORIENTATION_NORMAL:
+                            default:
+                                rotatedBitmap = bitmap;
+                        }
+                        captured_image.setImageBitmap(rotatedBitmap);
+                    }
+
+                    btn_ok.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            uploadImage();
+                            dialog.dismiss();
+                        }
+                    });
+
+                    btn_cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
                 }
 
             } catch (URISyntaxException e) {

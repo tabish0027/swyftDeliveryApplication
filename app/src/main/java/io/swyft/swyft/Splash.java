@@ -50,51 +50,51 @@ public class Splash extends AppCompatActivity {
 
     List<Rider> riderList = new ArrayList<>();
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1234) {
-            if (resultCode != RESULT_OK) {
-                Log.d("Update", "Update flow failed! Result code: " + resultCode);
-                // If the update is cancelled or fails,
-                // you can request to start the update again.
-                // update dialog
-
-                int MY_REQUEST_CODE = 1234;
-
-                // Creates instance of the manager.
-                AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(Splash.this);
-
-// Returns an intent object that you use to check for an update.
-                Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
-
-// Checks that the platform will allow the specified type of update.
-                appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
-                    if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                            // For a flexible update, use AppUpdateType.FLEXIBLE
-                            && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
-                        // Request the update.
-                        // Request an immediate update.
-                        try {
-                            appUpdateManager.startUpdateFlowForResult(
-                                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
-                                    appUpdateInfo,
-                                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
-                                    AppUpdateType.IMMEDIATE,
-                                    // The current activity making the update request.
-                                    Splash.this,
-                                    // Include a request code to later monitor this update request.
-                                    MY_REQUEST_CODE);
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-                // update dialog
-            }
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 1234) {
+//            if (resultCode != RESULT_OK) {
+//                Log.d("Update", "Update flow failed! Result code: " + resultCode);
+//                // If the update is cancelled or fails,
+//                // you can request to start the update again.
+//                // update dialog
+//
+//                int MY_REQUEST_CODE = 1234;
+//
+//                // Creates instance of the manager.
+//                AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(Splash.this);
+//
+//// Returns an intent object that you use to check for an update.
+//                Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+//
+//// Checks that the platform will allow the specified type of update.
+//                appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+//                    if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+//                            // For a flexible update, use AppUpdateType.FLEXIBLE
+//                            && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+//                        // Request the update.
+//                        // Request an immediate update.
+//                        try {
+//                            appUpdateManager.startUpdateFlowForResult(
+//                                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
+//                                    appUpdateInfo,
+//                                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+//                                    AppUpdateType.IMMEDIATE,
+//                                    // The current activity making the update request.
+//                                    Splash.this,
+//                                    // Include a request code to later monitor this update request.
+//                                    MY_REQUEST_CODE);
+//                        } catch (IntentSender.SendIntentException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//
+//                // update dialog
+//            }
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,36 +105,36 @@ public class Splash extends AppCompatActivity {
 
         // update dialog
 
-        int MY_REQUEST_CODE = 1234;
-
-        // Creates instance of the manager.
-        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(Splash.this);
-
-// Returns an intent object that you use to check for an update.
-        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
-
-// Checks that the platform will allow the specified type of update.
-        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                    // For a flexible update, use AppUpdateType.FLEXIBLE
-                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
-                // Request the update.
-                // Request an immediate update.
-                try {
-                    appUpdateManager.startUpdateFlowForResult(
-                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
-                            appUpdateInfo,
-                            // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
-                            AppUpdateType.IMMEDIATE,
-                            // The current activity making the update request.
-                            Splash.this,
-                            // Include a request code to later monitor this update request.
-                            MY_REQUEST_CODE);
-                } catch (IntentSender.SendIntentException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        int MY_REQUEST_CODE = 1234;
+//
+//        // Creates instance of the manager.
+//        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(Splash.this);
+//
+//// Returns an intent object that you use to check for an update.
+//        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+//
+//// Checks that the platform will allow the specified type of update.
+//        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+//            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+//                    // For a flexible update, use AppUpdateType.FLEXIBLE
+//                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+//                // Request the update.
+//                // Request an immediate update.
+//                try {
+//                    appUpdateManager.startUpdateFlowForResult(
+//                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+//                            appUpdateInfo,
+//                            // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+//                            AppUpdateType.IMMEDIATE,
+//                            // The current activity making the update request.
+//                            Splash.this,
+//                            // Include a request code to later monitor this update request.
+//                            MY_REQUEST_CODE);
+//                } catch (IntentSender.SendIntentException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
         // update dialog
 
