@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -506,6 +507,11 @@ public class activity_signature_pad extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<RiderActivityDelivery>> call, Response<List<RiderActivityDelivery>> response) {
                 if (response.isSuccessful()) {
+
+                    int resID=getResources().getIdentifier("success", "raw", getPackageName());
+
+                    MediaPlayer mediaPlayer=MediaPlayer.create(activity_signature_pad.this,resID);
+                    mediaPlayer.start();
 
                     List<RiderActivityDelivery> parcels = response.body();
                     parcels = Databackbone.getinstance().resortDelivery(parcels);

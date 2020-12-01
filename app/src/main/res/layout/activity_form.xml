@@ -165,6 +165,16 @@
                         app:srcCompat="@drawable/icon_drawer_deliver" />
 
                     <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="@dimen/form_width"
+                        android:layout_height="@dimen/form_height"
+                        android:padding="1dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tx_vendor_id"
+                        app:layout_constraintStart_toStartOf="@+id/guideline4"
+                        app:layout_constraintTop_toTopOf="@+id/tx_vendor_id"
+                        app:srcCompat="@drawable/icon_drawer_deliver" />
+
+                    <ImageView
                         android:id="@+id/imageView9"
                         android:layout_width="@dimen/form_width"
                         android:layout_height="@dimen/form_height"
@@ -227,6 +237,17 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/guideline4"
                         app:layout_constraintTop_toBottomOf="@+id/tx_parcel_id" />
+                    <LinearLayout
+                        android:id="@+id/underbar_vendor"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/divider_thickness"
+                        android:layout_marginTop="8dp"
+                        android:background="#6f308f"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/guideline4"
+                        app:layout_constraintTop_toBottomOf="@+id/tx_vendor_id" />
 
                     <LinearLayout
                         android:id="@+id/underbar_discription"
@@ -309,7 +330,7 @@
                         app:layout_constraintEnd_toStartOf="@+id/guideline3"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="@+id/tx_parcel_id"
-                        app:layout_constraintTop_toBottomOf="@+id/underbar_parcel" />
+                        app:layout_constraintTop_toBottomOf="@+id/underbar_vendor" />
 
                     <TextView
                         android:id="@+id/tx_description_detail"
@@ -371,6 +392,21 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tx_address"
                         app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+
+                    <TextView
+                        android:id="@+id/tx_vendor_id"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/avenirfile"
+                        android:text="Vendor ID # 1312414235"
+                        android:textColor="#231f20"
+                        android:textSize="@dimen/app_text_size"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/tx_parcel_id"
+                        app:layout_constraintTop_toBottomOf="@+id/underbar_parcel" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/constraintLayout3"

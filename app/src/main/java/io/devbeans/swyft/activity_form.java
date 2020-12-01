@@ -20,7 +20,7 @@ import io.devbeans.swyft.interface_retrofit_delivery.Datum;
 
 public class activity_form extends AppCompatActivity {
     ImageView btn_back;
-    TextView tx_name,tx_address,tx_parcel_id,tx_payment_method,tx_amount_to_collect;
+    TextView tx_name,tx_address,tx_parcel_id, tx_vendor_id,tx_payment_method,tx_amount_to_collect;
     Button btn_delivered;
     ImageView btn_payment_method,btn_navigation,btn_parcel_selection,btn_sms,btn_phone;
     Button btn_diclined;
@@ -178,13 +178,14 @@ public class activity_form extends AppCompatActivity {
             btn_parcel_selection.setVisibility(View.INVISIBLE);
             btn_delivered.setText("DELIVERED");
             btn_diclined.setText("DECLINED");
-            tx_parcel_id.setText("Parcels Id : " + data.getParcels().get(0).getParcelId());
+            tx_parcel_id.setText("Parcels ID : " + data.getParcels().get(0).getParcelId());
+            tx_vendor_id.setText("Vendor ID: " + data.getParcels().get(0).getVendorId());
             tx_description_detail.setText(data.getParcels().get(0).getDescription());
             tx_description_title.setText("Parcel Description");
         }
         else{
             tx_parcel_id.setText("Parcels count : " + Integer.toString(parcel_count));
-
+            tx_vendor_id.setText("Vendor ID: " + data.getParcels().get(0).getVendorId());
             btn_delivered.setText("DELIVERED ALL");
             btn_diclined.setText("DECLINED ALL");
             tx_description_detail.setText("Please process all Parcels to mark this task complete");
@@ -221,6 +222,7 @@ public class activity_form extends AppCompatActivity {
             tx_name = findViewById(R.id.tx_name);
             tx_address = findViewById(R.id.tx_address);
             tx_parcel_id = findViewById(R.id.tx_parcel_id);
+            tx_vendor_id = findViewById(R.id.tx_vendor_id);
             tx_payment_method = findViewById(R.id.tx_payment_method);
             tx_name.setText(data.getName());
             PhoneNumber = data.getPhone();

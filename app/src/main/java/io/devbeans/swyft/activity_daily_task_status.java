@@ -602,6 +602,8 @@ public class activity_daily_task_status extends Activity {
         Retrofit retrofit = Databackbone.getinstance().getRetrofitbuilder();
         swift_api_delivery riderapidata = retrofit.create(swift_api_delivery.class);
         EnableLoading();
+        String token = Databackbone.getinstance().rider.getId();
+        String userId = Databackbone.getinstance().rider.getUserId();
         Call<List<RiderActivityDelivery>> call = riderapidata.manageTaskfordelivery(Databackbone.getinstance().rider.getId(),(Databackbone.getinstance().rider.getUserId()));
         call.enqueue(new Callback<List<RiderActivityDelivery>>() {
             @Override
