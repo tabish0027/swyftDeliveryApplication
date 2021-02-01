@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -350,6 +351,10 @@ public class activity_signature_pad extends AppCompatActivity {
                     Databackbone.getinstance().cam_image_data = signatureURLModel;
                     image_url = Databackbone.getinstance().cam_image_data.getMessage();
                     Log.e("UploadImage", image_url);
+
+                    Drawable img = getResources().getDrawable(R.drawable.tick);
+                    img.setBounds(0, 0, 40, 40);
+                    capture_image.setCompoundDrawables(null, null, img, null);
 
                     DisableLoading();
 
