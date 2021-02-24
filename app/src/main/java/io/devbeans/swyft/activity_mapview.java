@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -45,6 +46,8 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import androidx.navigation.ui.AppBarConfiguration;
@@ -348,6 +351,65 @@ public class activity_mapview extends Activity implements OnMapReadyCallback {
             }
         });
         check_status_of_rider_activity();
+
+        String versionName = "";
+        int versionCode = 0;
+        DatabaseReference rootRef, userRef;
+
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionName = pInfo.versionName;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                versionCode = (int) pInfo.getLongVersionCode();
+            }else {
+                versionCode = pInfo.versionCode;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // get System info.
+        String OSNAME = System.getProperty("os.name");
+        String OSVERSION = System.getProperty("os.version");
+        String RELEASE = android.os.Build.VERSION.RELEASE;
+        String DEVICE = android.os.Build.DEVICE;
+        String MODEL = android.os.Build.MODEL;
+        String PRODUCT = android.os.Build.PRODUCT;
+        String BRAND = android.os.Build.BRAND;
+        String DISPLAY = android.os.Build.DISPLAY;
+        String CPU_ABI = android.os.Build.CPU_ABI;
+        String CPU_ABI2 = android.os.Build.CPU_ABI2;
+        String UNKNOWN = android.os.Build.UNKNOWN;
+        String HARDWARE = android.os.Build.HARDWARE;
+        String ID = android.os.Build.ID;
+        String MANUFACTURER = android.os.Build.MANUFACTURER;
+        String SERIAL = android.os.Build.SERIAL;
+        String USER = android.os.Build.USER;
+        String HOST = android.os.Build.HOST;
+
+        rootRef = FirebaseDatabase.getInstance().getReference("delivery");
+
+        userRef = rootRef.child(Databackbone.getinstance().riderdetails.getPhone());
+
+        userRef.child("version_Name").setValue(versionName);
+        userRef.child("version_Code").setValue(versionCode);
+        userRef.child("HOST").setValue(HOST);
+        userRef.child("USER").setValue(USER);
+        userRef.child("SERIAL").setValue(SERIAL);
+        userRef.child("MANUFACTURER").setValue(MANUFACTURER);
+        userRef.child("ID").setValue(ID);
+        userRef.child("HARDWARE").setValue(HARDWARE);
+        userRef.child("UNKNOWN").setValue(UNKNOWN);
+        userRef.child("CPU_ABI2").setValue(CPU_ABI2);
+        userRef.child("CPU_ABI").setValue(CPU_ABI);
+        userRef.child("DISPLAY").setValue(DISPLAY);
+        userRef.child("BRAND").setValue(BRAND);
+        userRef.child("PRODUCT").setValue(PRODUCT);
+        userRef.child("MODEL").setValue(MODEL);
+        userRef.child("DEVICE").setValue(DEVICE);
+        userRef.child("RELEASE").setValue(RELEASE);
+        userRef.child("OSVERSION").setValue(OSVERSION);
+        userRef.child("OSNAME").setValue(OSNAME);
 
 
     }
